@@ -1,5 +1,17 @@
-import React from 'react'
+import { type ActivityData } from '@/shared/types'
 
-export const Activity = () => {
-  return <div>Activity</div>
+interface ActivityProps {
+  activity: ActivityData;
 }
+
+function Activity({ activity }: ActivityProps) {
+  const { title, description, coverImage, altImage, isHabit, cost, meta } = activity
+  return (
+    <div className='border'>
+      <p>{title}</p>
+      <p>{isHabit}</p>
+    </div>
+  )
+}
+
+export default Activity
