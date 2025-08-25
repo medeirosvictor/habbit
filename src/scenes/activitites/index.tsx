@@ -12,13 +12,12 @@ type Props = {
 
 function Activitites({ setSelectedPage }: Props) {
   const isAboveMediumScreens = useMediaQuery('(min-width: 1060px)')
-  const [activities, setActivitites] = useState<Array<ActivityData>>(mockActivities)
-
+  const [activities, setActivities] = useState<Array<ActivityData>>(mockActivities)
 
   return (
-    <section id='activities' className='my-5 py-5'>
-      <div className='flex flex-col mx-auto w-5/6 justify-center'>
-        <ActivityTable activities={activities}/>
+    <section id="activities" className="my-5 py-5">
+      <div className="flex flex-col mx-auto w-5/6 justify-center">
+        <ActivityTable activities={activities} setActivities={setActivities} />
       </div>
     </section>
   )
