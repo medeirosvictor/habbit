@@ -7,3 +7,11 @@ Helps you decide on what to do when you have to many options or no ideas :)
 
 Icon library
 heroicons.com
+
+backend
+
+python -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
