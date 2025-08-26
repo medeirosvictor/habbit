@@ -1,6 +1,6 @@
 import type { ActivityData } from '@/shared/types'
 import { useState, type FormEvent } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import api from '@/api'
 
 interface AddActivityFormProps {
   setActivities: (activities: Array<ActivityData>) => void
@@ -25,18 +25,29 @@ function AddActivityForm({ setActivities }: AddActivityFormProps) {
   })
   const { title } = formData
 
+  const createActivity = (e) => {
+    e.preventDefault()
+    api
+      .post('/api/activities/', { title, content: title })
+      .then((res) => {
+        if (res.status === 201) console.log('activity created')
+        else console.log('failed to create')
+      })
+      .catch((err) => console.log(err))
+  }
+
   const handleAddActivity = (e: FormEvent) => {
     e.preventDefault()
     if (!title) return
 
     const newActivity = {
       ...formData,
-      id: uuidv4(),
       title,
     }
+    createActivity(e)
 
     setActivities((prev) => [...prev, newActivity])
-    setFormData((prev) => ({ ...formData, title: '', id: '' }))
+    setFormData(() => ({ ...formData, title: '', id: '' }))
   }
 
   return (

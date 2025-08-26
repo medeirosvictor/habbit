@@ -1,10 +1,9 @@
-import ActionButton from '@/shared/ActionButton'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { SelectedPage, type ActivityData } from '@/shared/types'
 import ActivityTable from '@/components/ActivityTable'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { mockActivities } from '@/data/mockdata'
-import AddActivityForm from '@/components/AddActivityForm'
+import api from '@/api'
 
 type Props = {
   setSelectedPage: (value: SelectedPage) => void
@@ -13,6 +12,31 @@ type Props = {
 function Activitites({ setSelectedPage }: Props) {
   const isAboveMediumScreens = useMediaQuery('(min-width: 1060px)')
   const [activities, setActivities] = useState<Array<ActivityData>>(mockActivities)
+
+  useEffect(() => {
+    getActivities()
+  }, [])
+
+  const getActivities = () => {
+    api
+      .get('/api/activities/')
+      .then((res) => res.data)
+      .then((data) => {
+        setActivities(data)
+        console.log(data)
+      })
+      .catch((err) => console.log(err))
+  }
+
+  const deleteActivity = (id) => {
+    api
+      .delete(`/api/activities/delete/${id}/`)
+      .then((res) => {
+        if (res.status === 204) console.log('activity deleted')
+        else console.log('failed to delete')
+      })
+      .catch((err) => console.log(err))
+  }
 
   return (
     <section id="activities" className="my-5 py-5">
