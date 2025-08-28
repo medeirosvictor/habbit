@@ -1,5 +1,5 @@
 {
-  "name": "feno",
+  "name": "habbit",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -45,13 +45,13 @@
   "main": "eslint.config.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/medeirosvictor/feno.git"
+    "url": "git+https://github.com/medeirosvictor/habbit.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/medeirosvictor/feno/issues"
+    "url": "https://github.com/medeirosvictor/habbit/issues"
   },
-  "homepage": "https://github.com/medeirosvictor/feno#readme"
+  "homepage": "https://github.com/medeirosvictor/habbit#readme"
 }
