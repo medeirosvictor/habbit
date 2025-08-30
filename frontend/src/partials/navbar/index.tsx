@@ -5,6 +5,7 @@ import Logo from '@/assets/logo.png'
 import Link from './Link'
 import type { SelectedPage } from '@/shared/types'
 import useMediaQuery from '@/hooks/useMediaQuery'
+import { useAuth } from '@/hooks/useAuth'
 
 interface NavbarProps {
   isTopOfPage: boolean
@@ -17,11 +18,12 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false)
   const isAboveMediumScreens = useMediaQuery('(min-width: 1060px)')
   const navbarBackground = isTopOfPage ? '' : 'bg-primary-100 drop-shadow'
+  const { isAuthorized, logout } = useAuth()
 
   return (
-    <nav className="h-[100px]">
+    <nav className="h-[110px]">
       <div
-        className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-6 transition duration-400 bg-primary-100`}
+        className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-5 transition duration-400 bg-primary-100`}
       >
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
@@ -54,7 +56,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
                 </div>
                 <div className={`${flexBetween} gap-8 text-sm`}>
                   <Link
-                    page="Sign In"
+                    page={isAuthorized ? 'Logout' : 'Login'}
                     selectedPage={selectedPage}
                     setSelectedPage={setSelectedPage}
                   />

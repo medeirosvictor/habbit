@@ -25,13 +25,11 @@ function Header({ selectedPage, setSelectedPage }: Props) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
   return (
-    <div>
-      <Navbar
-        isTopOfPage={isTopOfPage}
-        selectedPage={selectedPage}
-        setSelectedPage={setSelectedPage}
-      />
-    </div>
+    <Navbar
+      isTopOfPage={isTopOfPage}
+      selectedPage={selectedPage}
+      setSelectedPage={setSelectedPage}
+    />
   )
 }
 

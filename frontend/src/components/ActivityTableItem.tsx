@@ -9,19 +9,28 @@ interface ActivityTableItemProps {
 }
 
 function ActivityTableItem({ activity }: ActivityTableItemProps) {
-  const { title, description, coverImage, altImage, isHabit, cost, meta } = activity
+  const {
+    title,
+    description,
+    isHabit,
+    hasBeenCompletedToday,
+    shared,
+    dateCreated,
+    dateLastUpdated,
+    timesCompleted,
+  } = activity
   const [pomodoroTimer, setPomodoroTimer] = useState<boolean>(false)
-  // const [isComplete, setIsComplete] = useState<string>(
-  //   meta.hasBeenCompletedToday ? EMOJIS.complete : EMOJIS.pending,
-  // )
+  const [isComplete, setIsComplete] = useState<string>(
+    hasBeenCompletedToday ? EMOJIS.complete : EMOJIS.pending,
+  )
 
-  // const handleCompleteActivity = () => {
-  //   if (isComplete === EMOJIS.pending) {
-  //     setIsComplete(EMOJIS.complete)
-  //   } else {
-  //     setIsComplete(EMOJIS.pending)
-  //   }
-  // }
+  const handleCompleteActivity = () => {
+    if (isComplete === EMOJIS.pending) {
+      setIsComplete(EMOJIS.complete)
+    } else {
+      setIsComplete(EMOJIS.pending)
+    }
+  }
 
   const handlePomodoroThisActivity = () => {
     setPomodoroTimer(true)
@@ -43,9 +52,9 @@ function ActivityTableItem({ activity }: ActivityTableItemProps) {
         )}
         <div>
           <ul className="flex gap-1">
-            {/* <li className="cursor-pointer" onClick={handleCompleteActivity}>
+            <li className="cursor-pointer" onClick={handleCompleteActivity}>
               {isComplete}
-            </li> */}
+            </li>
             <li className="cursor-pointer" onClick={handlePomodoroThisActivity}>
               {EMOJIS.tomato}
             </li>
@@ -68,12 +77,11 @@ function ActivityTableItem({ activity }: ActivityTableItemProps) {
             <div className="flex flex-col text-md gap-3">
               <textarea className="border p-1 rounded-md">{description}</textarea>
               <p>{isHabit ? 'Habit' : 'Wanna make it a habit?'}</p>
-              <p>created: {meta.dateCreated.toLocaleDateString()}</p>
-              <p>updated: {meta.dateLastUpdated.toLocaleDateString()}</p>
-              <p>Completed: {meta.numberOfTimesCompleted} times</p>
-              {/* <p>Today? {meta.hasBeenCompletedToday ? 'Yes' : 'No'}</p> */}
-              {cost && <p>cost: {cost}CAD</p>}
-              <p>{meta.shared ? 'Shared' : 'Not Shared'}</p>
+              <p>created: {dateCreated.toLocaleDateString()}</p>
+              <p>updated: {dateLastUpdated.toLocaleDateString()}</p>
+              <p>Completed: {timesCompleted} times</p>
+              <p>Today? {hasBeenCompletedToday ? 'Yes' : 'No'}</p>
+              <p>{shared ? 'Shared' : 'Not Shared'}</p>
             </div>
             <div className="mt-4 flex justify-end gap-2">
               <button className="cursor-pointer">Save Changes</button>

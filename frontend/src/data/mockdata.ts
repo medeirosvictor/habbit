@@ -13,7 +13,7 @@ export const mockActivities: Array<ActivityData> = [
     meta: {
       dateCreated: new Date('2024-01-15'),
       dateLastUpdated: new Date('2024-08-19'),
-      numberOfTimesCompleted: 45,
+      timesCompleted: 45,
       hasBeenCompletedToday: false,
       shared: true,
     },
@@ -29,7 +29,7 @@ export const mockActivities: Array<ActivityData> = [
     meta: {
       dateCreated: new Date('2024-02-01'),
       dateLastUpdated: new Date('2024-08-19'),
-      numberOfTimesCompleted: 28,
+      timesCompleted: 28,
       hasBeenCompletedToday: true,
       shared: false,
     },
@@ -45,7 +45,7 @@ export const mockActivities: Array<ActivityData> = [
     meta: {
       dateCreated: new Date('2024-03-10'),
       dateLastUpdated: new Date('2024-08-18'),
-      numberOfTimesCompleted: 12,
+      timesCompleted: 12,
       hasBeenCompletedToday: false,
       shared: true,
     },

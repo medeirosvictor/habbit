@@ -19,7 +19,7 @@ function AddActivityForm({ setActivities }: AddActivityFormProps) {
       hasBeenCompletedToday: false,
       dateCreated: '',
       dateLastUpdated: '',
-      numberOfTimesCompleted: 0,
+      timesCompleted: 0,
       shared: false,
     },
   })

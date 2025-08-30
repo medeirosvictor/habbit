@@ -1,16 +1,9 @@
-import type { SelectedPage } from '@/shared/types'
-import React from 'react'
+type Props = {}
 
-type Props = {
-  setSelectedPage: (value: SelectedPage) => void
-}
-
-function Shared({ setSelectedPage }: Props) {
+function Shared({}: Props) {
   return (
     <section>
-      <div>
-        Shared Activities
-      </div>
+      <div>Shared Activities</div>
     </section>
   )
 }

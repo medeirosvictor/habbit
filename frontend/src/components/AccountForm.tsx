@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import api from '@/api'
 import { useNavigate } from 'react-router'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/constants'
@@ -15,7 +15,7 @@ const AccountForm = ({ route, method }: Props) => {
   const navigate = useNavigate()
   const formName = method === 'login' ? 'Login' : 'Register'
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
     setLoading(true)
     e.preventDefault()
 

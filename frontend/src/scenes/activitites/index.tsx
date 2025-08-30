@@ -1,16 +1,12 @@
-import useMediaQuery from '@/hooks/useMediaQuery'
-import { SelectedPage, type ActivityData } from '@/shared/types'
+import { type ActivityData } from '@/shared/types'
 import ActivityTable from '@/components/ActivityTable'
 import { useEffect, useState } from 'react'
 import { mockActivities } from '@/data/mockdata'
 import api from '@/api'
 
-type Props = {
-  setSelectedPage: (value: SelectedPage) => void
-}
+type Props = {}
 
-function Activitites({ setSelectedPage }: Props) {
-  const isAboveMediumScreens = useMediaQuery('(min-width: 1060px)')
+function Activitites({}: Props) {
   const [activities, setActivities] = useState<Array<ActivityData>>(mockActivities)
 
   useEffect(() => {
