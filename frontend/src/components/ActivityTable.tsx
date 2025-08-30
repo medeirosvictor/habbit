@@ -9,7 +9,7 @@ interface ActivityTableProps {
 
 function ActivityTable({ activities, setActivities }: ActivityTableProps) {
   return (
-    <div className="border-1 rounded-md drop-shadow-md">
+    <div className="border-1 drop-shadow-md">
       {activities.length &&
         activities.map((activity) => <ActivityTableItem activity={activity} key={activity.id} />)}
       <AddActivityForm setActivities={setActivities} />

@@ -24,7 +24,6 @@ const AccountForm = ({ route, method }: Props) => {
       if (method === 'login') {
         localStorage.setItem(ACCESS_TOKEN, res.data.access)
         localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
-        console.log(localStorage)
         navigate('/')
       } else {
         navigate('/login')

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 @import 'tailwindcss';
 
@@ -15,7 +15,7 @@
   --color-secondary-400: #9c90c9;
   --color-secondary-500: #806db2;
 
-  --font-dmsans: 'DM Sans', sans-serif;
+  --font-dmsans: 'DM Mono', sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
 
   --breakpoint-xs: 480px;
@@ -31,6 +31,6 @@ body,
 .app {
   height: 100%;
   width: 100%;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'DM Mono', sans-serif;
   @apply text-gray-500;
 }

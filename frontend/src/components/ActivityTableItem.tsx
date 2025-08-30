@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { type ActivityData } from '@/shared/types'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { EMOJIS } from '@/constants'
@@ -10,19 +10,21 @@ interface ActivityTableItemProps {
 
 function ActivityTableItem({ activity }: ActivityTableItemProps) {
   const {
+    id,
     title,
     description,
-    isHabit,
-    hasBeenCompletedToday,
+    is_habit,
+    completed,
     shared,
-    dateCreated,
-    dateLastUpdated,
-    timesCompleted,
+    created_at,
+    last_updated,
+    times_completed,
   } = activity
   const [pomodoroTimer, setPomodoroTimer] = useState<boolean>(false)
-  const [isComplete, setIsComplete] = useState<string>(
-    hasBeenCompletedToday ? EMOJIS.complete : EMOJIS.pending,
-  )
+  const [isComplete, setIsComplete] = useState<string>(completed ? EMOJIS.complete : EMOJIS.pending)
+
+  const createdDate = useMemo(() => new Date(created_at), [created_at])
+  const updatedDate = useMemo(() => new Date(last_updated), [last_updated])
 
   const handleCompleteActivity = () => {
     if (isComplete === EMOJIS.pending) {
@@ -43,7 +45,7 @@ function ActivityTableItem({ activity }: ActivityTableItemProps) {
       <div className="flex justify-between border-b-1 p-2">
         <div className="">
           <p>{title}</p>
-          <p>{isHabit}</p>
+          <p>{is_habit}</p>
         </div>
         {pomodoroTimer && (
           <div>
@@ -75,12 +77,12 @@ function ActivityTableItem({ activity }: ActivityTableItemProps) {
               </button>
             </div>
             <div className="flex flex-col text-md gap-3">
-              <textarea className="border p-1 rounded-md">{description}</textarea>
-              <p>{isHabit ? 'Habit' : 'Wanna make it a habit?'}</p>
-              <p>created: {dateCreated.toLocaleDateString()}</p>
-              <p>updated: {dateLastUpdated.toLocaleDateString()}</p>
-              <p>Completed: {timesCompleted} times</p>
-              <p>Today? {hasBeenCompletedToday ? 'Yes' : 'No'}</p>
+              <textarea defaultValue={description} className="border p-1 shadow-md"></textarea>
+              <p>{is_habit ? 'Habit' : 'Wanna make it a habit?'}</p>
+              <p>created: {createdDate.toLocaleDateString()}</p>
+              <p>updated: {updatedDate.toLocaleDateString()}</p>
+              <p>Completed: {times_completed} times</p>
+              <p>Today? {completed ? 'Yes' : 'No'}</p>
               <p>{shared ? 'Shared' : 'Not Shared'}</p>
             </div>
             <div className="mt-4 flex justify-end gap-2">

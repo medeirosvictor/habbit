@@ -5,12 +5,14 @@ type Props = {}
 
 function Home({}: Props) {
   return (
-    <div>
-      <div className="app bg-gray-50 font-bold">
+    <>
+      <section className="">
         <Activitites />
+      </section>
+      <section>
         <Shared />
-      </div>
-    </div>
+      </section>
+    </>
   )
 }
 

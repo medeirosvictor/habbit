@@ -6,13 +6,13 @@ export enum SelectedPage {
 }
 
 export interface ActivityData {
-  id: string
+  id: number
   title: string
   description: string
-  isHabit: boolean
-  dateCreated: Date
-  dateLastUpdated: Date
-  timesCompleted: number
-  hasBeenCompletedToday: boolean
+  is_habit: boolean
+  created_at: Date
+  last_updated: Date
+  times_completed: number
+  completed: boolean
   shared: boolean
 }

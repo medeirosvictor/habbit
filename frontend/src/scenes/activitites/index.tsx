@@ -1,13 +1,12 @@
 import { type ActivityData } from '@/shared/types'
 import ActivityTable from '@/components/ActivityTable'
 import { useEffect, useState } from 'react'
-import { mockActivities } from '@/data/mockdata'
 import api from '@/api'
 
 type Props = {}
 
 function Activitites({}: Props) {
-  const [activities, setActivities] = useState<Array<ActivityData>>(mockActivities)
+  const [activities, setActivities] = useState<Array<ActivityData>>()
 
   useEffect(() => {
     getActivities()
@@ -19,7 +18,6 @@ function Activitites({}: Props) {
       .then((res) => res.data)
       .then((data) => {
         setActivities(data)
-        console.log(data)
       })
       .catch((err) => console.log(err))
   }
@@ -35,11 +33,9 @@ function Activitites({}: Props) {
   }
 
   return (
-    <section id="activities" className="my-5 py-5">
-      <div className="flex flex-col mx-auto w-5/6 justify-center">
-        <ActivityTable activities={activities} setActivities={setActivities} />
-      </div>
-    </section>
+    <div id="activities" className="flex flex-col max-w-[1060px] mx-auto">
+      {activities && <ActivityTable activities={activities} setActivities={setActivities} />}
+    </div>
   )
 }
 
