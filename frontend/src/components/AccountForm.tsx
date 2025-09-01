@@ -36,23 +36,32 @@ const AccountForm = ({ route, method }: Props) => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center gap-2">
       {loading}
-      <form onSubmit={handleSubmit}>
-        <h1>{formName}</h1>
+      <h1 className="text-5xl">Habbit</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-1 justify-center items-center">
         <input
+          id="username"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Username"
+          className="border-1 border-violet-700 p-1"
         />
         <input
+          id="password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          className="border-1 border-violet-700 p-1"
         />
-        <button type="submit">{formName}</button>
+        <button
+          className="cursor-pointer border-1 border-emerald-600 p-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white"
+          type="submit"
+        >
+          {formName}
+        </button>
       </form>
     </div>
   )

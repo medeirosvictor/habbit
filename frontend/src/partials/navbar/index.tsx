@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
-import ActionButton from '@/shared/ActionButton'
 import Logo from '@/assets/logo.png'
 import Link from './Link'
 import type { SelectedPage } from '@/shared/types'
@@ -28,43 +27,26 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
             {/* Left side nav */}
-            <img className="w-[100px]" src={Logo} alt="logo" />
+            <img className="md:w-[100px] w-[60px]" src={Logo} alt="logo" />
+
+            <h1 className="text-3xl">Habbit</h1>
             {/* Right side nav */}
             {isAboveMediumScreens ? (
               <div className={`${flexBetween} w-full`}>
                 <div className={`${flexBetween} gap-8 text-sm`}>
-                  <Link
-                    page="Activities"
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
-                  />
-                  <Link
-                    page="Shared"
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
-                  />
-                  <Link
-                    page="About"
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
-                  />
-                  <Link
-                    page="Contact Us"
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
-                  />
+                  <Link page="home" name="activities" />
+                  <Link page="shared" name="shared" />
+                  <Link page="about" name="about" />
                 </div>
                 <div className={`${flexBetween} gap-8 text-sm`}>
                   <Link
                     page={isAuthorized ? 'Logout' : 'Login'}
-                    selectedPage={selectedPage}
-                    setSelectedPage={setSelectedPage}
+                    name={isAuthorized ? 'Logout' : 'Login'}
                   />
-                  <ActionButton setSelectedPage={setSelectedPage}>Contact Us</ActionButton>
                 </div>
               </div>
             ) : (
-              <div>
+              <div className="flex justify-between">
                 <button
                   className="rounded-full bg-secondary-500 p-2"
                   onClick={() => setIsMenuToggled(!isMenuToggled)}
@@ -85,10 +67,9 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
             </button>
           </div>
           <div className="ml-[33%] flex flex-col text-xl gap-10">
-            <Link page="Activities" selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
-            <Link page="Shared" selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
-            <Link page="About" selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
-            <Link page="Contact Us" selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
+            <Link page="/" name="activities" />
+            <Link page="shared" name="shared" />
+            <Link page="about" name="about" />
           </div>
         </div>
       )}

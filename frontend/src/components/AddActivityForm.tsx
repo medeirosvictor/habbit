@@ -1,53 +1,41 @@
 import type { ActivityData } from '@/shared/types'
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type Dispatch, type SetStateAction } from 'react'
 import api from '@/api'
 
 interface AddActivityFormProps {
-  setActivities: (activities: Array<ActivityData>) => void
+  setActivities: Dispatch<SetStateAction<ActivityData[]>>
 }
 
 function AddActivityForm({ setActivities }: AddActivityFormProps) {
-  const [formData, setFormData] = useState<ActivityData>({
-    id: '',
-    title: '',
-    description: '',
-    coverImage: '',
-    altImage: '',
-    isHabit: false,
-    cost: 0,
-    meta: {
-      hasBeenCompletedToday: false,
-      dateCreated: '',
-      dateLastUpdated: '',
-      timesCompleted: 0,
-      shared: false,
-    },
-  })
-  const { title } = formData
+  const [title, setTitle] = useState<string>('')
 
-  const createActivity = (e) => {
-    e.preventDefault()
-    api
-      .post('/api/activities/', { title, content: title })
-      .then((res) => {
-        if (res.status === 201) console.log('activity created')
-        else console.log('failed to create')
-      })
-      .catch((err) => console.log(err))
+  const newActivity: ActivityData = {
+    id: Date.now(),
+    title,
+    description: '',
+    is_habit: false,
+    completed: false,
+    shared: false,
+    created_at: new Date(),
+    last_updated: new Date(),
+    times_completed: 0,
   }
 
   const handleAddActivity = (e: FormEvent) => {
     e.preventDefault()
     if (!title) return
 
-    const newActivity = {
-      ...formData,
-      title,
-    }
-    createActivity(e)
+    api
+      .post('/api/activities/', { title })
+      .then((res) => {
+        if (res.status === 201) {
+          console.log('activity created')
+          setActivities((prev) => [...prev, newActivity])
+        } else console.log('failed to create')
+      })
+      .catch((err) => console.log(err))
 
-    setActivities((prev) => [...prev, newActivity])
-    setFormData(() => ({ ...formData, title: '', id: '' }))
+    setTitle('')
   }
 
   return (
@@ -55,7 +43,7 @@ function AddActivityForm({ setActivities }: AddActivityFormProps) {
       <form onSubmit={handleAddActivity}>
         <input
           value={title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          onChange={(e) => setTitle(e.target.value)}
           className="w-full focus:border-0 p-2"
           type="text"
           placeholder="quick add a todo"

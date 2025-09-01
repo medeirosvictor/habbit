@@ -1,18 +1,12 @@
-import Activitites from '@/scenes/activitites'
-import Shared from '@/scenes/shared'
+import Activities from '@/scenes/activities'
 
 type Props = {}
 
 function Home({}: Props) {
   return (
-    <>
-      <section className="">
-        <Activitites />
-      </section>
-      <section>
-        <Shared />
-      </section>
-    </>
+    <section className="">
+      <Activities />
+    </section>
   )
 }
 

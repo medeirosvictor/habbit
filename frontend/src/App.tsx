@@ -6,6 +6,8 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 import LoginOrRegister from './pages/LoginOrRegister'
+import Shared from './pages/Shared'
+import About from './pages/About'
 
 function Logout() {
   return <Navigate to="/login" replace />
@@ -16,8 +18,8 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<Login />} />
           <Route element={<Layout />}>
-            <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route
               path="/"
@@ -27,6 +29,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/shared"
+              element={
+                <ProtectedRoute>
+                  <Shared />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/about" element={<About />} />
             <Route path="/signin" element={<LoginOrRegister />} />
             <Route path="*" element={<NotFound />} />
           </Route>

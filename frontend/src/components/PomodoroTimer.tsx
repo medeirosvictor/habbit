@@ -10,9 +10,13 @@ const PomodoroTimer = ({ initialTime }: PomodoroTimerProps) => {
 
   return (
     <div className="flex gap-1">
-      <div>{formatTime(timeLeft)}</div>
-      <button onClick={isRunning ? pause : start}>{EMOJIS.playpause}</button>
-      <button onClick={reset}>{EMOJIS.reset}</button>
+      <div className="border-1 p-1">{formatTime(timeLeft)}</div>
+      <button className="cursor-pointer" onClick={isRunning ? pause : start}>
+        {EMOJIS.playpause}
+      </button>
+      <button className="cursor-pointer" onClick={reset}>
+        {EMOJIS.reset}
+      </button>
     </div>
   )
 }

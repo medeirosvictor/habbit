@@ -5,8 +5,8 @@ import api from '@/api'
 
 type Props = {}
 
-function Activitites({}: Props) {
-  const [activities, setActivities] = useState<Array<ActivityData>>()
+function Activities({}: Props) {
+  const [activities, setActivities] = useState<ActivityData[]>([])
 
   useEffect(() => {
     getActivities()
@@ -22,16 +22,6 @@ function Activitites({}: Props) {
       .catch((err) => console.log(err))
   }
 
-  const deleteActivity = (id) => {
-    api
-      .delete(`/api/activities/delete/${id}/`)
-      .then((res) => {
-        if (res.status === 204) console.log('activity deleted')
-        else console.log('failed to delete')
-      })
-      .catch((err) => console.log(err))
-  }
-
   return (
     <div id="activities" className="flex flex-col max-w-[1060px] mx-auto">
       {activities && <ActivityTable activities={activities} setActivities={setActivities} />}
@@ -39,4 +29,4 @@ function Activitites({}: Props) {
   )
 }
 
-export default Activitites
+export default Activities

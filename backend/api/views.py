@@ -26,6 +26,16 @@ class ActivityDelete(generics.DestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         return Activity.objects.filter(author=user)
+    
+
+class ActivityUpdate(generics.UpdateAPIView):
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Activity.objects.filter(author=user)
+    
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
