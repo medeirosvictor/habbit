@@ -96,7 +96,7 @@ function ActivityTableItem({
 
   return (
     <>
-      <div className="flex justify-between border-b-1 p-1 h-[60px] items-center">
+      <div className="flex justify-between border-b-1 p-2 h-[60px] items-center">
         <div className="w-[150px] flex gap-1 items-center">
           <p>{title}</p>
           <p>{is_habit ? EMOJIS.habbit : ''}</p>

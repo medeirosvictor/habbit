@@ -39,11 +39,12 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
                   <Link page="about" name="about" />
                 </div>
                 <div className={`${flexBetween} gap-8 text-sm`}>
-                  <Link
-                    page={isAuthorized ? 'Logout' : 'Login'}
-                    name={isAuthorized ? 'Logout' : 'Login'}
+                  <button
+                    className="w-[80px] text-red-400 font-bold underline"
                     onClick={isAuthorized ? logout : undefined}
-                  />
+                  >
+                    {isAuthorized ? 'Logout' : 'Login'}
+                  </button>
                 </div>
               </div>
             ) : (
