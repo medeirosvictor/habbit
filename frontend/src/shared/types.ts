@@ -1,8 +1,8 @@
 export enum SelectedPage {
-  Activities = 'activities',
-  ContactUs = 'contactus',
-  Shared = 'shared',
-  About = 'about',
+  activities = 'activities',
+  contactus = 'contactus',
+  shared = 'shared',
+  about = 'about',
 }
 
 export interface ActivityData {

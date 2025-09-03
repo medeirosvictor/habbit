@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import Navbar from './navbar'
+import Navbar from './Navbar'
 import { SelectedPage } from '@/shared/types'
 
 type Props = {

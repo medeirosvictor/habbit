@@ -17,6 +17,7 @@ const PomodoroTimer = ({ initialTime }: PomodoroTimerProps) => {
       <button className="cursor-pointer" onClick={reset}>
         {EMOJIS.reset}
       </button>
+      <div>{isComplete && EMOJIS.complete}</div>
     </div>
   )
 }

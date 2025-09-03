@@ -46,7 +46,7 @@ function AddActivityForm({ setActivities }: AddActivityFormProps) {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full focus:border-0 p-2"
           type="text"
-          placeholder="quick add a todo"
+          placeholder="add a new activity 🐇"
         />
       </form>
     </div>

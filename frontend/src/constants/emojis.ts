@@ -9,4 +9,5 @@ export const EMOJIS = {
   details: '🔍',
   playpause: '⏯︎',
   reset: '🔄',
+  habbit: '🐇',
 }

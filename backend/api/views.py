@@ -4,6 +4,9 @@ from rest_framework import generics
 from .serializers import UserSerializer, ActivitySerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Activity
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.response import Response
+from rest_framework import status
 
 class ActivityListCreate(generics.ListCreateAPIView):
     serializer_class = ActivitySerializer
@@ -41,3 +44,11 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except User.DoesNotExist:
+            # Return a 401 Unauthorized response instead of 500
+            return Response({'detail': 'User not found.'}, status=status.HTTP_401_UNAUTHORIZED)

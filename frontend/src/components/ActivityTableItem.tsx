@@ -20,6 +20,7 @@ function ActivityTableItem({
   isOpen,
   setOpenDetailId,
 }: ActivityTableItemProps) {
+  const [formData, setFormData] = useState<ActivityData>(activity)
   const {
     id,
     title,
@@ -30,12 +31,11 @@ function ActivityTableItem({
     created_at,
     last_updated,
     times_completed,
-  } = activity
+  } = formData
   const [pomodoroTimer, setPomodoroTimer] = useState<boolean>(false)
   const [isComplete, setIsComplete] = useState<string>(completed ? EMOJIS.complete : EMOJIS.pending)
   const createdDate = useMemo(() => new Date(created_at), [created_at])
   const updatedDate = useMemo(() => new Date(last_updated), [last_updated])
-  const [formData, setFormData] = useState<ActivityData>(activity)
 
   const toggleDetail = () => {
     if (isOpen)
@@ -51,10 +51,6 @@ function ActivityTableItem({
     }
   }
 
-  const handlePomodoroThisActivity = () => {
-    setPomodoroTimer(true)
-  }
-
   const handleDeleteActivity = () => {
     // add confirmation dialog
     api
@@ -68,18 +64,25 @@ function ActivityTableItem({
       .catch((err) => console.log(err))
   }
 
-  const handleUpdateActivity = () => {
-    const updatedFormData = {
-      ...formData,
-      last_updated: new Date(),
-    }
+  const updateTimesCompleted = () => {
+    const updatedTimesCompleted = completed ? (times_completed ?? 0) + 1 : (times_completed ?? 0)
+    setFormData((prev) => ({ ...prev, times_completed: updatedTimesCompleted }))
+  }
 
+  const updateLastUpdated = () => {
+    setFormData((prev) => ({ ...prev, last_updated: new Date() }))
+  }
+
+  const handleUpdateActivity = () => {
+    updateTimesCompleted()
+
+    updateLastUpdated()
     api
-      .put(`/api/activities/update/${id}/`, updatedFormData)
+      .put(`/api/activities/update/${id}/`, formData)
       .then((res) => {
         if (res.status === 200) {
           console.log('Activity updated: ', res.data)
-          onUpdate(updatedFormData)
+          onUpdate(formData)
         } else {
           console.log('Update failed')
         }
@@ -93,10 +96,10 @@ function ActivityTableItem({
 
   return (
     <>
-      <div className="flex justify-between border-b-1 p-2 md:h-[60px] items-center">
-        <div className="">
-          <p className="w-[80px]">{title}</p>
-          <p>{is_habit}</p>
+      <div className="flex justify-between border-b-1 p-1 h-[60px] items-center">
+        <div className="w-[150px] flex gap-1 items-center">
+          <p>{title}</p>
+          <p>{is_habit ? EMOJIS.habbit : ''}</p>
         </div>
         {pomodoroTimer && (
           <div>
@@ -108,7 +111,7 @@ function ActivityTableItem({
             <li className="cursor-pointer" onClick={handleCompleteActivity}>
               {isComplete}
             </li>
-            <li className="cursor-pointer" onClick={handlePomodoroThisActivity}>
+            <li className="cursor-pointer" onClick={() => setPomodoroTimer(!pomodoroTimer)}>
               {EMOJIS.tomato}
             </li>
             <li className="cursor-pointer" onClick={toggleDetail}>
@@ -119,8 +122,8 @@ function ActivityTableItem({
       </div>
       {/* Details Modal */}
       {isOpen && (
-        <div className="fixed left-0 right-0 z-50 flex items-center justify-center max-w-md mx-auto">
-          <div className="bg-amber-50 rounded-lg p-6 w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <div className="absolute left-0 right-0 top-1/2 z-50 flex items-center justify-center max-w-md mx-auto">
+          <div className="bg-amber-50 border-1 rounded-lg p-6 w-full max-h-[80vh] overflow-y-auto shadow-ld">
             <div className="flex flex-col gap-3 mb-4">
               <form className="flex flex-col justify-center gap-3" onSubmit={handleEditFormSubmit}>
                 <div className="flex justify-between">
@@ -129,7 +132,7 @@ function ActivityTableItem({
                     type="text"
                     name="title"
                     id="title"
-                    defaultValue={formData.title}
+                    defaultValue={title}
                     onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   />
                   <button onClick={() => setOpenDetailId(null)}>
@@ -138,14 +141,14 @@ function ActivityTableItem({
                 </div>
                 <textarea
                   id="description"
-                  defaultValue={formData.description}
+                  defaultValue={description}
                   className="border p-1 shadow-md"
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, description: e.target.value }))
                   }
                 ></textarea>
                 <div className="flex justify-between">
-                  <p>{formData.is_habit ? 'Habit' : 'Make it a daily habit?'}</p>
+                  <p>{is_habit ? 'Habit' : 'Make it a daily habit?'}</p>
                   <input
                     id="ishabit"
                     type="checkbox"
@@ -157,7 +160,7 @@ function ActivityTableItem({
                   />
                 </div>
                 <div className="flex justify-between">
-                  <p>{formData.completed ? 'Done' : 'Not done yet'}</p>
+                  <p>{completed ? 'Done' : 'Not done yet'}</p>
                   <input
                     id="completed"
                     type="checkbox"
@@ -168,13 +171,9 @@ function ActivityTableItem({
                     }
                   />
                 </div>
-                <p className="underline">{formData.shared ? 'Shared' : 'Share with friends'}</p>
+                <p className="underline">{shared ? 'Shared' : 'Share with friends'}</p>
                 <div>
-                  <p>
-                    {formData.is_habit
-                      ? `Completed ${formData.times_completed ?? 0} times`
-                      : ''}{' '}
-                  </p>
+                  <p>{`Completed ${times_completed ?? 0} times`} </p>
                   <p>created: {createdDate.toLocaleDateString()}</p>
                   <p>updated: {updatedDate.toLocaleDateString()}</p>
                 </div>

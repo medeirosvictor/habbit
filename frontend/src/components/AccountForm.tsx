@@ -15,18 +15,27 @@ const AccountForm = ({ route, method }: Props) => {
   const navigate = useNavigate()
   const formName = method === 'login' ? 'Login' : 'Register'
 
+  const configureLocalStorage = (access: string, refresh: string) => {
+    localStorage.setItem(ACCESS_TOKEN, access)
+    localStorage.setItem(REFRESH_TOKEN, refresh)
+  }
+
   const handleSubmit = async (e: FormEvent) => {
     setLoading(true)
     e.preventDefault()
 
     try {
+      // login or register user based on method prop
       const res = await api.post(route, { username, password })
+
+      // if registering, automatically log in the user else just login
       if (method === 'login') {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access)
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
-        navigate('/')
+        configureLocalStorage(res.data.access, res.data.refresh)
+        navigate('/activities')
       } else {
-        navigate('/login')
+        const loginRes = await api.post('/api/token/', { username, password })
+        configureLocalStorage(loginRes.data.access, loginRes.data.refresh)
+        navigate('/activities')
       }
     } catch (error) {
       console.log(error)

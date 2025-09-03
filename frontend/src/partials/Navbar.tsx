@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
 import Logo from '@/assets/logo.png'
-import Link from './Link'
+import Link from '@/components/Link'
 import type { SelectedPage } from '@/shared/types'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { useAuth } from '@/hooks/useAuth'
@@ -12,7 +12,7 @@ interface NavbarProps {
   setSelectedPage: (value: SelectedPage) => void
 }
 
-const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => {
+const Navbar = ({ isTopOfPage }: NavbarProps) => {
   const flexBetween = 'flex items-center justify-between'
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false)
   const isAboveMediumScreens = useMediaQuery('(min-width: 1060px)')
@@ -34,7 +34,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
             {isAboveMediumScreens ? (
               <div className={`${flexBetween} w-full`}>
                 <div className={`${flexBetween} gap-8 text-sm`}>
-                  <Link page="home" name="activities" />
+                  <Link page="activities" name="activities" />
                   <Link page="shared" name="shared" />
                   <Link page="about" name="about" />
                 </div>
@@ -42,6 +42,7 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
                   <Link
                     page={isAuthorized ? 'Logout' : 'Login'}
                     name={isAuthorized ? 'Logout' : 'Login'}
+                    onClick={isAuthorized ? logout : undefined}
                   />
                 </div>
               </div>
@@ -67,9 +68,15 @@ const Navbar = ({ isTopOfPage, selectedPage, setSelectedPage }: NavbarProps) => 
             </button>
           </div>
           <div className="ml-[33%] flex flex-col text-xl gap-10">
-            <Link page="/" name="activities" />
+            <Link page="activities" name="activities" />
             <Link page="shared" name="shared" />
             <Link page="about" name="about" />
+            <button
+              className="border-1 p-2 w-[100px] text-red-400 font-bold"
+              onClick={isAuthorized ? logout : undefined}
+            >
+              {isAuthorized ? 'Logout' : 'Login'}
+            </button>
           </div>
         </div>
       )}

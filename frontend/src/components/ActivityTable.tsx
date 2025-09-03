@@ -2,13 +2,15 @@ import type { ActivityData } from '@/shared/types'
 import ActivityTableItem from './ActivityTableItem'
 import AddActivityForm from './AddActivityForm'
 import { useState } from 'react'
+import { Link } from 'react-router'
 
 interface ActivityTableProps {
   activities: Array<ActivityData>
   setActivities: React.Dispatch<React.SetStateAction<Array<ActivityData>>>
+  isStaticTable?: boolean
 }
 
-function ActivityTable({ activities, setActivities }: ActivityTableProps) {
+function ActivityTable({ activities, setActivities, isStaticTable = true }: ActivityTableProps) {
   const [openDetailId, setOpenDetailId] = useState<number | null>(null)
 
   const onDelete = (id: number) => {
@@ -24,7 +26,7 @@ function ActivityTable({ activities, setActivities }: ActivityTableProps) {
   }
 
   return (
-    <div className="border-1 drop-shadow-md">
+    <div className="border-1 rounded-lg">
       {activities?.map((activity) => (
         <ActivityTableItem
           activity={activity}
@@ -35,7 +37,16 @@ function ActivityTable({ activities, setActivities }: ActivityTableProps) {
           setOpenDetailId={setOpenDetailId}
         />
       ))}
-      <AddActivityForm setActivities={setActivities} />
+      {!isStaticTable ? (
+        <AddActivityForm setActivities={setActivities} />
+      ) : (
+        <div className="p-4 text-center text-gray-500">
+          No activities shared,{' '}
+          <Link to="/activities" className="text-blue-500 underline">
+            go share some!
+          </Link>
+        </div>
+      )}
     </div>
   )
 }
