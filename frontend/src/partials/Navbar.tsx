@@ -16,13 +16,13 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
   const flexBetween = 'flex items-center justify-between'
   const [isMenuToggled, setIsMenuToggled] = useState<boolean>(false)
   const isAboveMediumScreens = useMediaQuery('(min-width: 1060px)')
-  const navbarBackground = isTopOfPage ? '' : 'bg-primary-100 drop-shadow'
+  const navbarBackground = isTopOfPage ? '' : 'bg-gray-100 drop-shadow'
   const { isAuthorized, logout } = useAuth()
 
   return (
     <nav className="h-[110px]">
       <div
-        className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-5 transition duration-400 bg-primary-100`}
+        className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-5 transition duration-400 bg-gray-20 border-b-1 border-dashed`}
       >
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
@@ -62,7 +62,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
       </div>
       {/* Mobile Side Modal */}
       {!isAboveMediumScreens && isMenuToggled && (
-        <div className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-primary-100 drop-shadow-lg">
+        <div className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-gray-50 drop-shadow-lg">
           <div className="flex justify-end p-12">
             <button onClick={() => setIsMenuToggled(!isMenuToggled)}>
               <XMarkIcon className="h-6 w-6 text-gray-500" />

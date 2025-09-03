@@ -14,7 +14,7 @@ function Header({ selectedPage, setSelectedPage }: Props) {
     const handleScroll = () => {
       if (window.scrollY === 0) {
         setIsTopOfPage(true)
-        setSelectedPage(SelectedPage.Activities)
+        setSelectedPage(SelectedPage.activities)
       }
       if (window.scrollY !== 0) setIsTopOfPage(false)
     }
