@@ -25,4 +25,4 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-### to be deployed on render (guide)[https://www.youtube.com/watch?v=sgDY5t4G3C8&list=PLmEKHA8iFrmCAPgSe9ze8RXXdE0M11suR&index=5]
+### to be deployed on render ([guide](https://www.youtube.com/watch?v=sgDY5t4G3C8&list=PLmEKHA8iFrmCAPgSe9ze8RXXdE0M11suR&index=5))
