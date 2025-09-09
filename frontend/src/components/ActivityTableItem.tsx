@@ -96,13 +96,13 @@ function ActivityTableItem({ activity, isOpen, setOpenDetailId }: ActivityTableI
       </div>
       {/* Details Modal */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-1/2 z-50 flex items-center justify-center max-w-md mx-auto">
+        <div className="absolute left-0 right-0 top-1/4 z-50 flex items-center justify-center max-w-md mx-auto">
           <div className="bg-amber-50 border-1 rounded-lg p-6 w-full max-h-[80vh] overflow-y-auto shadow-ld">
             <div className="flex flex-col gap-3 mb-4">
               <form className="flex flex-col justify-center gap-3" onSubmit={handleEditFormSubmit}>
                 <div className="flex justify-between">
                   <input
-                    className="text-xl font-bold p-1"
+                    className="text-xl font-bold p-1 w-[300px] overflow-ellipsis focus-within:text-sm"
                     type="text"
                     name="title"
                     id="title"

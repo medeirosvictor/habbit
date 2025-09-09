@@ -36,6 +36,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/about" element={<About />} />
             </Route>
           </Routes>
         </ActivityProvider>
