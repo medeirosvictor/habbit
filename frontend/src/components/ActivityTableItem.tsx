@@ -4,22 +4,15 @@ import { XMarkIcon } from '@heroicons/react/24/solid'
 import { EMOJIS } from '@/constants'
 import PomodoroTimer from './PomodoroTimer'
 import api from '@/api'
+import { useActivityContext } from '@/hooks/useActivityContext'
 
 interface ActivityTableItemProps {
   activity: ActivityData
-  onDelete: (id: number) => void
-  onUpdate: (updatedActivity: ActivityData) => void
   isOpen: boolean
   setOpenDetailId: (id: number | null) => void
 }
 
-function ActivityTableItem({
-  activity,
-  onDelete,
-  onUpdate,
-  isOpen,
-  setOpenDetailId,
-}: ActivityTableItemProps) {
+function ActivityTableItem({ activity, isOpen, setOpenDetailId }: ActivityTableItemProps) {
   const [formData, setFormData] = useState<ActivityData>(activity)
   const {
     id,
@@ -36,6 +29,7 @@ function ActivityTableItem({
   const [isComplete, setIsComplete] = useState<string>(completed ? EMOJIS.complete : EMOJIS.pending)
   const createdDate = useMemo(() => new Date(created_at), [created_at])
   const updatedDate = useMemo(() => new Date(last_updated), [last_updated])
+  const { onDeleteActivity, onUpdateActivity } = useActivityContext()
 
   const toggleDetail = () => {
     if (isOpen)
@@ -52,16 +46,8 @@ function ActivityTableItem({
   }
 
   const handleDeleteActivity = () => {
-    // add confirmation dialog
-    api
-      .delete(`/api/activities/delete/${id}/`)
-      .then((res) => {
-        if (res.status === 204) {
-          console.log('activity deleted')
-          onDelete(id)
-        } else console.log('failed to delete')
-      })
-      .catch((err) => console.log(err))
+    onDeleteActivity(id)
+    setOpenDetailId(null)
   }
 
   const updateTimesCompleted = () => {
@@ -75,19 +61,8 @@ function ActivityTableItem({
 
   const handleUpdateActivity = () => {
     updateTimesCompleted()
-
     updateLastUpdated()
-    api
-      .put(`/api/activities/update/${id}/`, formData)
-      .then((res) => {
-        if (res.status === 200) {
-          console.log('Activity updated: ', res.data)
-          onUpdate(formData)
-        } else {
-          console.log('Update failed')
-        }
-      })
-      .catch((err) => console.log(err))
+    onUpdateActivity(formData)
   }
 
   const handleEditFormSubmit = (e: FormEvent) => {

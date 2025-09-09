@@ -1,40 +1,14 @@
-import type { ActivityData } from '@/shared/types'
-import { useState, type FormEvent, type Dispatch, type SetStateAction } from 'react'
-import api from '@/api'
+import { useState, type FormEvent, type FC } from 'react'
+import { useActivityContext } from '@/hooks/useActivityContext'
 
-interface AddActivityFormProps {
-  setActivities: Dispatch<SetStateAction<ActivityData[]>>
-}
-
-function AddActivityForm({ setActivities }: AddActivityFormProps) {
+export const AddActivityForm: FC = () => {
   const [title, setTitle] = useState<string>('')
-
-  const newActivity: ActivityData = {
-    id: Date.now(),
-    title,
-    description: '',
-    is_habit: false,
-    completed: false,
-    shared: false,
-    created_at: new Date(),
-    last_updated: new Date(),
-    times_completed: 0,
-  }
+  const { onCreateActivity } = useActivityContext()
 
   const handleAddActivity = (e: FormEvent) => {
     e.preventDefault()
     if (!title) return
-
-    api
-      .post('/api/activities/', { title })
-      .then((res) => {
-        if (res.status === 201) {
-          console.log('activity created')
-          setActivities((prev) => [...prev, newActivity])
-        } else console.log('failed to create')
-      })
-      .catch((err) => console.log(err))
-
+    onCreateActivity(title)
     setTitle('')
   }
 
