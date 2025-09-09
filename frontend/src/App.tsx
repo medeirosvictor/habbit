@@ -7,6 +7,7 @@ import LoginOrRegister from './pages/LoginOrRegister'
 import Shared from './pages/Shared'
 import About from './pages/About'
 import Activities from './pages/Activities'
+import { ActivityProvider } from '@/context/ActivityProvider'
 
 function Logout() {
   return <Navigate to="/login" replace />
@@ -16,29 +17,33 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ActivityProvider>
+          <Routes>
+            <Route element={<Layout />}>
+              <Route
+                path="/activities"
+                element={
+                  <ProtectedRoute>
+                    <Activities />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/shared"
+                element={
+                  <ProtectedRoute>
+                    <Shared />
+                  </ProtectedRoute>
+                }
+              />
+            </Route>
+          </Routes>
+        </ActivityProvider>
         <Routes>
           <Route path="*" element={<NotFound />} />
-          <Route element={<Layout />}>
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/login" element={<LoginOrRegister />} />
-            <Route path="/about" element={<About />} />
-            <Route
-              path="/activities"
-              element={
-                <ProtectedRoute>
-                  <Activities />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/shared"
-              element={
-                <ProtectedRoute>
-                  <Shared />
-                </ProtectedRoute>
-              }
-            />
-          </Route>
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/login" element={<LoginOrRegister />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

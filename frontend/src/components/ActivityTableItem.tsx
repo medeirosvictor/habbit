@@ -3,7 +3,6 @@ import { type ActivityData } from '@/shared/types'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { EMOJIS } from '@/constants'
 import PomodoroTimer from './PomodoroTimer'
-import api from '@/api'
 import { useActivityContext } from '@/hooks/useActivityContext'
 
 interface ActivityTableItemProps {
@@ -110,7 +109,7 @@ function ActivityTableItem({ activity, isOpen, setOpenDetailId }: ActivityTableI
                     defaultValue={title}
                     onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
                   />
-                  <button onClick={() => setOpenDetailId(null)}>
+                  <button type="button" onClick={() => setOpenDetailId(null)}>
                     <XMarkIcon className="h-6 w-6 text-gray-500 cursor-pointer" />
                   </button>
                 </div>
@@ -157,12 +156,14 @@ function ActivityTableItem({ activity, isOpen, setOpenDetailId }: ActivityTableI
 
             <div className="mt-4 flex justify-end gap-2">
               <button
+                type="button"
                 onClick={handleUpdateActivity}
                 className="cursor-pointer border-2 p-1 border-emerald-600 hover:text-white hover:bg-emerald-600"
               >
                 save changes
               </button>
               <button
+                type="button"
                 onClick={handleDeleteActivity}
                 className="cursor-pointer border-2 p-1 border-red-600 hover:text-white hover:bg-red-600"
               >

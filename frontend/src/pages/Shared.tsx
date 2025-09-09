@@ -1,28 +1,19 @@
 import ActivityTable from '@/components/ActivityTable'
-import type { FC } from 'react'
-import { useState, useEffect } from 'react'
-import { type ActivityData } from '@/shared/types'
-import api from '@/api'
+import { useEffect, type FC } from 'react'
+import { useActivityContext } from '@/hooks/useActivityContext'
+import { ActivityProvider } from '@/context/ActivityProvider'
 
 const Shared: FC = () => {
-  const [activites, setActivities] = useState<ActivityData[]>([])
+  const { onFetchActivities } = useActivityContext()
 
   useEffect(() => {
-    api
-      .get('/api/activities/')
-      .then((res) => res.data)
-      .then((data) => {
-        const sharedActivities = data.filter((activity: ActivityData) => activity.shared)
-        setActivities(sharedActivities)
-      })
+    onFetchActivities()
   }, [])
 
   return (
-    <div>
-      <div>
-        <ActivityTable activities={activites} setActivities={setActivities} />
-      </div>
-    </div>
+    <ActivityProvider>
+      <ActivityTable isStaticTable={true} />
+    </ActivityProvider>
   )
 }
 
