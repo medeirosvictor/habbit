@@ -21,6 +21,15 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
     }
   }, [currentDay])
 
+  const onFetchActivity = async (id: number) => {
+    try {
+      const res = await api.get(`/api/activities/${id}/`)
+      if (res.status !== 200) return
+      return res.data
+    } catch (err) {
+      console.log(err)
+    }
+  }
   const onFetchActivities = async () => {
     const res = await api.get('/api/activities/')
     if (res.status !== 200) return
@@ -66,8 +75,31 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       .catch((err) => console.log(err))
   }
 
-  const onUpdateActivity = (updatedActivity: ActivityData) => {
-    const { id } = updatedActivity
+  const onUpdateActivity = (updatedActivity: ActivityData, onlyDoneId?: number) => {
+    if (onlyDoneId) {
+      onFetchActivity(onlyDoneId).then((data) => {
+        if (data) updatedActivity = data
+      })
+    }
+    const { id, last_completed, completed } = updatedActivity
+    const lastCompletedDate = new Date(last_completed || '')
+    const today = new Date()
+
+    if (completed) {
+      if (last_completed) {
+        if (lastCompletedDate.toDateString() === today.toDateString()) {
+          console.log('Activity already completed today. No update to times_completed made.')
+        } else {
+          updatedActivity.times_completed += 1
+        }
+      } else {
+        updatedActivity.last_completed = new Date()
+        updatedActivity.times_completed = 1
+      }
+    }
+
+    console.log('Updating activity with id:', id, 'Data:', updatedActivity)
+
     api
       .put(`/api/activities/update/${id}/`, updatedActivity)
       .then((res) => {
@@ -86,27 +118,22 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
   }
 
   const onCreateActivity = (title: string) => {
-    const newActivity: ActivityData = {
-      id: Date.now(),
-      title,
-      description: '',
-      is_habit: false,
-      completed: false,
-      shared: false,
-      created_at: new Date(),
-      last_updated: new Date(),
-      times_completed: 0,
-    }
-
     api
       .post('/api/activities/', { title })
       .then((res) => {
         if (res.status === 201) {
           console.log('activity created')
-          setActivities((prev) => [...prev, newActivity])
+          setActivities((prev) => [...prev, res.data])
         } else console.log('failed to create')
       })
       .catch((err) => console.log(err))
+  }
+
+  const onDayChangeActivityUpdateDebounced = () => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => {
+      onDayChangeActivityUpdate()
+    }, 5000) // wait 5 seconds after last call
   }
 
   const contextValue: ActivityContextType = {
@@ -117,6 +144,7 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
     activities,
     setActivities,
     onDayChangeActivityUpdate,
+    onFetchActivity,
   }
 
   return <ActivityContext.Provider value={contextValue}>{children}</ActivityContext.Provider>

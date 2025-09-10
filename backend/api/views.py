@@ -40,6 +40,20 @@ class ActivityUpdate(generics.UpdateAPIView):
         return Activity.objects.filter(author=user)
     
 
+class ActivityDetail(generics.RetrieveAPIView):
+    serializer_class = ActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Activity.objects.filter(author=user)
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            return self.retrieve(request, *args, **kwargs)
+        except Activity.DoesNotExist:
+            return Response({'detail': 'Activity not found.'}, status=status.HTTP_404_NOT_FOUND)
+
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer

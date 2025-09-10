@@ -15,4 +15,5 @@ export interface ActivityData {
   times_completed: number
   completed: boolean
   shared: boolean
+  last_completed: Date | null
 }

@@ -5,10 +5,10 @@ export const AddActivityForm: FC = () => {
   const [title, setTitle] = useState<string>('')
   const { onCreateActivity } = useActivityContext()
 
-  const handleAddActivity = (e: FormEvent) => {
+  const handleAddActivity = async (e: FormEvent) => {
     e.preventDefault()
     if (!title) return
-    onCreateActivity(title)
+    await onCreateActivity(title)
     setTitle('')
   }
 

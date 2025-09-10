@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { useActivityContext } from '@/hooks/useActivityContext'
 import { useEffect } from 'react'
+import ActivityDetailModal from './ActivityDetailModal'
 
 interface ActivityTableProps {
   isStaticTable?: boolean
 }
 
 function ActivityTable({ isStaticTable = true }: ActivityTableProps) {
+  const [currentModalActivityId, setCurrentModalActivityId] = useState<number | null>(null)
   const [openDetailId, setOpenDetailId] = useState<number | null>(null)
   const { activities, onFetchActivities } = useActivityContext()
 
@@ -25,6 +27,7 @@ function ActivityTable({ isStaticTable = true }: ActivityTableProps) {
           key={activity.id}
           isOpen={openDetailId === activity.id}
           setOpenDetailId={setOpenDetailId}
+          setCurrentModalActivityId={setCurrentModalActivityId}
         />
       ))}
       {!isStaticTable ? (
@@ -36,6 +39,14 @@ function ActivityTable({ isStaticTable = true }: ActivityTableProps) {
             go share some!
           </Link>
         </div>
+      )}
+
+      {/* Details Modal */}
+      {currentModalActivityId && (
+        <ActivityDetailModal
+          currentActivityId={currentModalActivityId}
+          setCurrentModalActivityId={setCurrentModalActivityId}
+        />
       )}
     </div>
   )
