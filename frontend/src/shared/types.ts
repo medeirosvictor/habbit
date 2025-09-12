@@ -17,3 +17,17 @@ export interface ActivityData {
   shared: boolean
   last_completed: Date | null
 }
+
+export interface ProfileData {
+  id: number
+  username: string
+  email: string
+  friends: Array<number>
+  activities: Array<number>
+  avatar_url: string | null
+}
+
+export interface MessageTypes {
+  type: 'success' | 'error' | 'info'
+  text: string
+}

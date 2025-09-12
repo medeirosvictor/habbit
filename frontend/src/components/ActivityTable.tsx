@@ -1,23 +1,16 @@
 import ActivityTableItem from './ActivityTableItem'
 import AddActivityForm from './AddActivityForm'
 import { useState } from 'react'
-import { Link } from 'react-router'
-import { useActivityContext } from '@/hooks/useActivityContext'
-import { useEffect } from 'react'
 import ActivityDetailModal from './ActivityDetailModal'
+import type { ActivityData } from '@/shared/types'
 
 interface ActivityTableProps {
   isStaticTable?: boolean
+  activities: Array<ActivityData>
 }
 
-function ActivityTable({ isStaticTable = true }: ActivityTableProps) {
+function ActivityTable({ activities, isStaticTable = true }: ActivityTableProps) {
   const [currentModalActivityId, setCurrentModalActivityId] = useState<number | null>(null)
-  const [openDetailId, setOpenDetailId] = useState<number | null>(null)
-  const { activities, onFetchActivities } = useActivityContext()
-
-  useEffect(() => {
-    onFetchActivities()
-  }, [])
 
   return (
     <div className="border-1 rounded-lg">
@@ -25,21 +18,11 @@ function ActivityTable({ isStaticTable = true }: ActivityTableProps) {
         <ActivityTableItem
           activity={activity}
           key={activity.id}
-          isOpen={openDetailId === activity.id}
-          setOpenDetailId={setOpenDetailId}
+          currentActivityId={currentModalActivityId}
           setCurrentModalActivityId={setCurrentModalActivityId}
         />
       ))}
-      {!isStaticTable ? (
-        <AddActivityForm />
-      ) : (
-        <div className="p-4 text-center text-gray-500">
-          No activities shared,{' '}
-          <Link to="/activities" className="text-blue-500 underline">
-            go share some!
-          </Link>
-        </div>
-      )}
+      {!isStaticTable && <AddActivityForm />}
 
       {/* Details Modal */}
       {currentModalActivityId && (

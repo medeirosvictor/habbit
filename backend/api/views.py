@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, ActivitySerializer
+from .serializers import ProfileSerializer, ActivitySerializer, PublicProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Activity
+from .models import Activity, Profile
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.response import Response
 from rest_framework import status
@@ -55,14 +54,26 @@ class ActivityDetail(generics.RetrieveAPIView):
             return Response({'detail': 'Activity not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class CreateUserView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
     permission_classes = [AllowAny]
+
+class Me(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return Profile.objects.get(user=self.request.user)
+
+class UserDetail(generics.RetrieveAPIView):
+    serializer_class = PublicProfileSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Profile.objects.all()
 
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         try:
             return super().post(request, *args, **kwargs)
-        except User.DoesNotExist:
+        except Profile.DoesNotExist:
             # Return a 401 Unauthorized response instead of 500
             return Response({'detail': 'User not found.'}, status=status.HTTP_401_UNAUTHORIZED)

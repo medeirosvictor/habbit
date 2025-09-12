@@ -1,12 +1,13 @@
 import { ActivityContext } from './ActivityContextObject'
 import type { ActivityContextType } from './ActivityTypes'
-import { type ActivityData } from '@/shared/types'
+import type { ActivityData, MessageTypes } from '@/shared/types'
 import { type ReactNode, useState, useRef, useEffect } from 'react'
 import api from '@/api'
 
 export function ActivityProvider({ children }: { children: ReactNode }) {
   const [activities, setActivities] = useState<Array<ActivityData>>([])
   const [currentDay, setCurrentDay] = useState<string>(new Date().toDateString())
+  const [message, setMessage] = useState<MessageTypes | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
@@ -21,6 +22,11 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
     }
   }, [currentDay])
 
+  const updateMessage = (msg: MessageTypes) => {
+    setMessage(msg)
+    setTimeout(() => setMessage(null), 2500)
+  }
+
   const onFetchActivity = async (id: number) => {
     try {
       const res = await api.get(`/api/activities/${id}/`)
@@ -30,6 +36,7 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       console.log(err)
     }
   }
+
   const onFetchActivities = async () => {
     const res = await api.get('/api/activities/')
     if (res.status !== 200) return
@@ -68,19 +75,21 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       .delete(`/api/activities/delete/${id}/`)
       .then((res) => {
         if (res.status === 204) {
-          console.log('activity deleted')
+          updateMessage({ type: 'info', text: 'activity deleted' })
           setActivities((prev: Array<ActivityData>) => prev.filter((act) => act.id !== id))
         } else console.log('failed to delete')
       })
       .catch((err) => console.log(err))
   }
 
-  const onUpdateActivity = (updatedActivity: ActivityData, onlyDoneId?: number) => {
-    if (onlyDoneId) {
-      onFetchActivity(onlyDoneId).then((data) => {
+  const onUpdateActivity = async (updatedActivity: ActivityData, onlyDoneId?: number) => {
+    if (onlyDoneId && !updatedActivity.id) {
+      await onFetchActivity(onlyDoneId).then((data) => {
         if (data) updatedActivity = data
+        updatedActivity.completed = !updatedActivity.completed
       })
     }
+
     const { id, last_completed, completed } = updatedActivity
     const lastCompletedDate = new Date(last_completed || '')
     const today = new Date()
@@ -88,7 +97,10 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
     if (completed) {
       if (last_completed) {
         if (lastCompletedDate.toDateString() === today.toDateString()) {
-          console.log('Activity already completed today. No update to times_completed made.')
+          updateMessage({
+            type: 'error',
+            text: 'Activity already completed today. No update to times_completed made.',
+          })
         } else {
           updatedActivity.times_completed += 1
         }
@@ -98,20 +110,18 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    console.log('Updating activity with id:', id, 'Data:', updatedActivity)
-
     api
       .put(`/api/activities/update/${id}/`, updatedActivity)
       .then((res) => {
         if (res.status === 200) {
-          console.log('Activity updated: ', res.data)
+          updateMessage({ type: 'success', text: 'Activity updated: ' + res.data })
           setActivities((prev) =>
             prev.map((activity) =>
               activity.id === updatedActivity.id ? { ...activity, ...updatedActivity } : activity,
             ),
           )
         } else {
-          console.log('Update failed')
+          updateMessage({ type: 'error', text: 'Update failed' })
         }
       })
       .catch((err) => console.log(err))
@@ -122,18 +132,15 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
       .post('/api/activities/', { title })
       .then((res) => {
         if (res.status === 201) {
-          console.log('activity created')
+          updateMessage({ type: 'success', text: 'activity created' })
           setActivities((prev) => [...prev, res.data])
         } else console.log('failed to create')
       })
       .catch((err) => console.log(err))
   }
 
-  const onDayChangeActivityUpdateDebounced = () => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => {
-      onDayChangeActivityUpdate()
-    }, 5000) // wait 5 seconds after last call
+  const checkForSharedActivities = (activities: Array<ActivityData>) => {
+    return activities.filter((ac) => ac.shared)
   }
 
   const contextValue: ActivityContextType = {
@@ -145,6 +152,9 @@ export function ActivityProvider({ children }: { children: ReactNode }) {
     setActivities,
     onDayChangeActivityUpdate,
     onFetchActivity,
+    message,
+    setMessage,
+    checkForSharedActivities,
   }
 
   return <ActivityContext.Provider value={contextValue}>{children}</ActivityContext.Provider>

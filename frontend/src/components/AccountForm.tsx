@@ -1,7 +1,7 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import api from '@/api'
 import { useNavigate } from 'react-router'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/constants'
+import { useAuth } from '@/hooks/useAuth'
 import axios from 'axios'
 
 type Props = {
@@ -16,22 +16,17 @@ const AccountForm = ({ route, method, setErrorMessage }: Props) => {
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const formName = method === 'login' ? 'Login' : 'Register'
-
-  const configureLocalStorage = (access: string, refresh: string) => {
-    localStorage.setItem(ACCESS_TOKEN, access)
-    localStorage.setItem(REFRESH_TOKEN, refresh)
-  }
+  const { login } = useAuth()
 
   const handleSubmit = async (e: FormEvent) => {
     setLoading(true)
     e.preventDefault()
 
     try {
-      // login or register user based on method prop
       const res = await api.post(route, { username, password })
 
       if (res.status == 200 || res.status === 201) {
-        configureLocalStorage(res.data.access, res.data.refresh)
+        await login(res.data.access, res.data.refresh)
         navigate('/activities')
       }
     } catch (error: Error | unknown) {

@@ -8,6 +8,9 @@ import Shared from './pages/Shared'
 import About from './pages/About'
 import Activities from './pages/Activities'
 import { ActivityProvider } from '@/context/ActivityProvider'
+import Toast from './components/Toast'
+import Friends from './pages/Friends'
+import Profile from './pages/Profile'
 
 function Logout() {
   return <Navigate to="/login" replace />
@@ -18,7 +21,9 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <ActivityProvider>
+          <Toast />
           <Routes>
+            {/* Layout-wrapped routes */}
             <Route element={<Layout />}>
               <Route
                 path="/activities"
@@ -36,16 +41,31 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/friends"
+                element={
+                  <ProtectedRoute>
+                    <Friends />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/about" element={<About />} />
             </Route>
+
+            {/* Top-level routes */}
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/login" element={<LoginOrRegister />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </ActivityProvider>
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/login" element={<LoginOrRegister />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
       </BrowserRouter>
     </AuthProvider>
   )

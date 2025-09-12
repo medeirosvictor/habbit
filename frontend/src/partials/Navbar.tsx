@@ -20,9 +20,9 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
   const { isAuthorized, logout } = useAuth()
 
   return (
-    <nav className="h-[110px]">
-      <div
-        className={`${navbarBackground} ${flexBetween} fixed top-0 z-30 w-full py-5 transition duration-400 bg-gray-20 border-b-1 border-dashed`}
+    <>
+      <nav
+        className={`${navbarBackground} ${flexBetween} h-[70px] sticky top-0 z-30 w-full py-5 transition duration-400 bg-gray-20 border-b-1 border-dashed`}
       >
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
@@ -36,6 +36,8 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
                 <div className={`${flexBetween} gap-8 text-sm`}>
                   <Link page="activities" name="activities" />
                   <Link page="shared" name="shared" />
+                  <Link page="friends" name="friends" />
+                  <Link page="profile" name="profile" />
                   <Link page="about" name="about" />
                 </div>
                 <div className={`${flexBetween} gap-8 text-sm`}>
@@ -59,10 +61,10 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
             )}
           </div>
         </div>
-      </div>
+      </nav>
       {/* Mobile Side Modal */}
       {!isAboveMediumScreens && isMenuToggled && (
-        <div className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-gray-50 drop-shadow-lg">
+        <div className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-gray-50 drop-shadow-lg border-l-1 border-dashed">
           <div className="flex justify-end p-12">
             <button onClick={() => setIsMenuToggled(!isMenuToggled)}>
               <XMarkIcon className="h-6 w-6 text-gray-500" />
@@ -71,6 +73,8 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
           <div className="ml-[33%] flex flex-col text-xl gap-10">
             <Link page="activities" name="activities" />
             <Link page="shared" name="shared" />
+            <Link page="friends" name="friends" />
+            <Link page="profile" name="profile" />
             <Link page="about" name="about" />
             <button
               className="border-1 p-2 w-[100px] text-red-400 font-bold"
@@ -81,7 +85,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
           </div>
         </div>
       )}
-    </nav>
+    </>
   )
 }
 
