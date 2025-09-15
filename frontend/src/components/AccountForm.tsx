@@ -60,8 +60,19 @@ const AccountForm = ({ route, method, setErrorMessage }: Props) => {
           placeholder="Password"
           className="border-1 border-violet-700 p-1"
         />
+        {method === 'register' && (
+          <>
+            <input
+              type="email"
+              name="email"
+              id=""
+              placeholder="email"
+              className="border-1 border-violet-700 p-1"
+            />
+          </>
+        )}
         <button
-          className="cursor-pointer border-1 border-emerald-600 p-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white"
+          className={`cursor-pointer border-1 border-emerald-600 p-2 mt-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white ${method === 'register' ? 'bg-emerald-600 text-white' : ''}`}
           type="submit"
         >
           {formName}

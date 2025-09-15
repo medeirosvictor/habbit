@@ -24,7 +24,7 @@ export interface ProfileData {
   email: string
   friends: Array<number>
   activities: Array<number>
-  avatar_url: string | null
+  avatar_url: string | undefined
 }
 
 export interface MessageTypes {
