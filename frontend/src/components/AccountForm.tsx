@@ -13,6 +13,7 @@ type Props = {
 const AccountForm = ({ route, method, setErrorMessage }: Props) => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const formName = method === 'login' ? 'Login' : 'Register'
@@ -23,11 +24,11 @@ const AccountForm = ({ route, method, setErrorMessage }: Props) => {
     e.preventDefault()
 
     try {
-      const res = await api.post(route, { username, password })
+      const res = await api.post(route, { username, password, email })
 
       if (res.status == 200 || res.status === 201) {
         await login(res.data.access, res.data.refresh)
-        navigate('/activities')
+        navigate('/rabits')
       }
     } catch (error: Error | unknown) {
       if (axios.isAxiosError(error)) {
@@ -65,8 +66,9 @@ const AccountForm = ({ route, method, setErrorMessage }: Props) => {
             <input
               type="email"
               name="email"
-              id=""
+              id="email"
               placeholder="email"
+              onChange={(e) => setEmail(e.target.value)}
               className="border-1 border-violet-700 p-1"
             />
           </>

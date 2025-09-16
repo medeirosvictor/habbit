@@ -6,7 +6,7 @@ import { SelectedPage } from '@/shared/types'
 import { useAuth } from '@/hooks/useAuth'
 
 export default function Layout() {
-  const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.activities)
+  const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.rabits)
   const { isAuthorized } = useAuth()
 
   return (

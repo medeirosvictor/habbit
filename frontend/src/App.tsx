@@ -6,8 +6,8 @@ import NotFound from './pages/NotFound'
 import LoginOrRegister from './pages/LoginOrRegister'
 import Shared from './pages/Shared'
 import About from './pages/About'
-import Activities from './pages/Activities'
-import { ActivityProvider } from '@/context/ActivityProvider'
+import Rabits from './pages/Rabits'
+import { RabitProvider } from '@/context/RabitProvider'
 import Toast from './components/Toast'
 import Friends from './pages/Friends'
 import Profile from './pages/Profile'
@@ -20,16 +20,16 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <ActivityProvider>
+        <RabitProvider>
           <Toast />
           <Routes>
             {/* Layout-wrapped routes */}
             <Route element={<Layout />}>
               <Route
-                path="/activities"
+                path="/rabits"
                 element={
                   <ProtectedRoute>
-                    <Activities />
+                    <Rabits />
                   </ProtectedRoute>
                 }
               />
@@ -65,7 +65,7 @@ function App() {
             <Route path="/login" element={<LoginOrRegister />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </ActivityProvider>
+        </RabitProvider>
       </BrowserRouter>
     </AuthProvider>
   )

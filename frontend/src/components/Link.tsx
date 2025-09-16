@@ -12,7 +12,7 @@ function Link({ page, name, onClick }: LinkProps) {
   return (
     <a
       href={`/${page.toLocaleLowerCase()}`}
-      className={`${page === activeLink.toLocaleLowerCase() ? 'text-primary-500 underline' : ''}
+      className={`${page === activeLink.toLocaleLowerCase() ? 'text-[#fd73e0] underline' : ''}
        transition duration-500 hover:text-primary-300`}
       onClick={onClick}
     >

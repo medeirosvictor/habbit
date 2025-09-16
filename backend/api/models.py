@@ -12,7 +12,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
 
-class Activity(models.Model):
+class Rabit(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(default='', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -22,7 +22,7 @@ class Activity(models.Model):
     completed = models.BooleanField(default=False)
     is_habit = models.BooleanField(default=False)
     shared = models.BooleanField(default=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='rabits')
 
     def __str__(self):
         return self.title

@@ -1,11 +1,11 @@
 export enum SelectedPage {
-  activities = 'activities',
+  rabits = 'rabits',
   contactus = 'contactus',
   shared = 'shared',
   about = 'about',
 }
 
-export interface ActivityData {
+export interface RabitData {
   id: number
   title: string
   description: string
@@ -23,7 +23,7 @@ export interface ProfileData {
   username: string
   email: string
   friends: Array<number>
-  activities: Array<number>
+  rabits: Array<number>
   avatar_url: string | undefined
 }
 

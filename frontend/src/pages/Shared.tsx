@@ -1,29 +1,29 @@
-import ActivityTable from '@/components/ActivityTable'
+import RabitTable from '@/components/RabitTable'
 import { useEffect, useState, type FC } from 'react'
-import { useActivityContext } from '@/hooks/useActivityContext'
-import type { ActivityData } from '@/shared/types'
+import { useRabitContext } from '@/hooks/useRabitContext'
+import type { RabitData } from '@/shared/types'
 import { Link } from 'react-router'
 
 const Shared: FC = () => {
-  const { onFetchActivities, checkForSharedActivities, activities } = useActivityContext()
-  const [sharedActivities, setSharedActivities] = useState<Array<ActivityData>>([])
+  const { onFetchRabits, checkForSharedRabits, rabits } = useRabitContext()
+  const [sharedRabits, setSharedRabits] = useState<Array<RabitData>>([])
 
   useEffect(() => {
-    onFetchActivities()
-    setSharedActivities(checkForSharedActivities(activities))
-  }, [activities])
+    onFetchRabits()
+    setSharedRabits(checkForSharedRabits(rabits))
+  }, [rabits])
 
-  if (sharedActivities) {
+  if (sharedRabits) {
     return (
       <div className="p-4 text-center text-gray-500">
-        No activities shared,{' '}
-        <Link to="/activities" className="text-blue-500 underline">
+        No rabits shared,{' '}
+        <Link to="/rabits" className="text-blue-500 underline">
           go share some!
         </Link>
       </div>
     )
   } else {
-    return <ActivityTable activities={sharedActivities} isStaticTable={true} />
+    return <RabitTable rabits={sharedRabits} isStaticTable={true} />
   }
 }
 

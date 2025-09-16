@@ -1,19 +1,19 @@
 from django.shortcuts import render
 from rest_framework import generics
-from .serializers import ProfileSerializer, ActivitySerializer, PublicProfileSerializer
+from .serializers import ProfileCreateSerializer, RabitSerializer, ProfileReadSerializer, PublicProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Activity, Profile
+from .models import Rabit, Profile
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.response import Response
 from rest_framework import status
 
-class ActivityListCreate(generics.ListCreateAPIView):
-    serializer_class = ActivitySerializer
+class RabitListCreate(generics.ListCreateAPIView):
+    serializer_class = RabitSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        return Activity.objects.filter(author=user)
+        return Rabit.objects.filter(author=user)
 
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -21,45 +21,45 @@ class ActivityListCreate(generics.ListCreateAPIView):
         else:
             print(serializer.errors)
     
-class ActivityDelete(generics.DestroyAPIView):
-    serializer_class = ActivitySerializer
+class RabitDelete(generics.DestroyAPIView):
+    serializer_class = RabitSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        return Activity.objects.filter(author=user)
+        return Rabit.objects.filter(author=user)
     
 
-class ActivityUpdate(generics.UpdateAPIView):
-    serializer_class = ActivitySerializer
+class RabitUpdate(generics.UpdateAPIView):
+    serializer_class = RabitSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        return Activity.objects.filter(author=user)
+        return Rabit.objects.filter(author=user)
     
 
-class ActivityDetail(generics.RetrieveAPIView):
-    serializer_class = ActivitySerializer
+class RabitDetail(generics.RetrieveAPIView):
+    serializer_class = RabitSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        return Activity.objects.filter(author=user)
+        return Rabit.objects.filter(author=user)
     
     def get(self, request, *args, **kwargs):
         try:
             return self.retrieve(request, *args, **kwargs)
-        except Activity.DoesNotExist:
-            return Response({'detail': 'Activity not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Rabit.DoesNotExist:
+            return Response({'detail': 'Rabit not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class CreateUserView(generics.CreateAPIView):
     queryset = Profile.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileCreateSerializer
     permission_classes = [AllowAny]
 
 class Me(generics.RetrieveAPIView):
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileReadSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):

@@ -22,7 +22,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
   return (
     <>
       <nav
-        className={`${navbarBackground} ${flexBetween} h-[70px] sticky top-0 z-30 w-full py-5 transition duration-400 bg-gray-20 border-b-1 border-dashed`}
+        className={`${navbarBackground} ${flexBetween} h-[70px] sticky top-0 z-30 w-full py-5 transition duration-400 bg-linear-to-r from-emerald-500 to-teal-500 border-b-1 border-dashed text-white`}
       >
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
@@ -34,7 +34,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
             {isAboveMediumScreens ? (
               <div className={`${flexBetween} w-full`}>
                 <div className={`${flexBetween} gap-8 text-sm`}>
-                  <Link page="activities" name="activities" />
+                  <Link page="rabits" name="rabits" />
                   <Link page="shared" name="shared" />
                   <Link page="friends" name="friends" />
                   <Link page="profile" name="profile" />
@@ -52,7 +52,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
             ) : (
               <div className="flex justify-between">
                 <button
-                  className="rounded-full bg-secondary-500 p-2"
+                  className="rounded-full bg-[#467ab8] p-2"
                   onClick={() => setIsMenuToggled(!isMenuToggled)}
                 >
                   <Bars3Icon className="h-6 w-6 text-white" />
@@ -64,14 +64,14 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
       </nav>
       {/* Mobile Side Modal */}
       {!isAboveMediumScreens && isMenuToggled && (
-        <div className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-gray-50 drop-shadow-lg border-l-1 border-dashed">
+        <div className="fixed right-0 bottom-0 z-40 h-full w-[250px] bg-linear-to-t from-emerald-600 to-teal-700 drop-shadow-lg border-l-1 border-dashed text-white">
           <div className="flex justify-end p-12">
             <button onClick={() => setIsMenuToggled(!isMenuToggled)}>
-              <XMarkIcon className="h-6 w-6 text-gray-500" />
+              <XMarkIcon className="h-6 w-6 text-[#fd73e0] cursor-pointer" />
             </button>
           </div>
           <div className="ml-[33%] flex flex-col text-xl gap-10">
-            <Link page="activities" name="activities" />
+            <Link page="rabits" name="rabits" />
             <Link page="shared" name="shared" />
             <Link page="friends" name="friends" />
             <Link page="profile" name="profile" />

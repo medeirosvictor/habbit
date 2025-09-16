@@ -1,27 +1,24 @@
 import { useMemo, useState, useEffect, type FormEvent } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import { type ActivityData } from '@/shared/types'
-import { useActivityContext } from '@/hooks/useActivityContext'
+import { type RabitData } from '@/shared/types'
+import { useRabitContext } from '@/hooks/useRabitContext'
 
-type ActivityDetailModalProps = {
-  currentActivityId: number
-  setCurrentModalActivityId: (id: number | null) => void
+type RabitDetailModalProps = {
+  currentRabitId: number
+  setCurrentModalRabitId: (id: number | null) => void
 }
 
-const ActivityDetailModal = ({
-  currentActivityId,
-  setCurrentModalActivityId,
-}: ActivityDetailModalProps) => {
-  const { onFetchActivity, onDeleteActivity, onUpdateActivity } = useActivityContext()
-  const [formData, setFormData] = useState<ActivityData | null>(null)
+const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetailModalProps) => {
+  const { onFetchRabit, onDeleteRabit, onUpdateRabit } = useRabitContext()
+  const [formData, setFormData] = useState<RabitData | null>(null)
 
   useEffect(() => {
-    async function fetchActivity() {
-      const data = await onFetchActivity(currentActivityId)
+    async function fetchRabit() {
+      const data = await onFetchRabit(currentRabitId)
       setFormData(data ?? null)
     }
-    fetchActivity()
-  }, [currentActivityId])
+    fetchRabit()
+  }, [currentRabitId])
 
   const createdDate = useMemo(
     () => (formData ? new Date(formData.created_at) : new Date()),
@@ -48,11 +45,11 @@ const ActivityDetailModal = ({
     setFormData((prev) => (prev ? { ...prev, last_updated: new Date() } : prev))
   }
 
-  const handleUpdateActivity = () => {
+  const handleUpdateRabit = () => {
     updateLastUpdated()
     setTimeout(() => {
       setFormData((prev) => {
-        if (prev) onUpdateActivity(prev)
+        if (prev) onUpdateRabit(prev)
         return prev
       })
     }, 0)
@@ -62,9 +59,9 @@ const ActivityDetailModal = ({
     e.preventDefault()
   }
 
-  const handleDeleteActivity = () => {
-    onDeleteActivity(id)
-    setCurrentModalActivityId(null)
+  const handleDeleteRabit = () => {
+    onDeleteRabit(id)
+    setCurrentModalRabitId(null)
   }
 
   return (
@@ -83,7 +80,7 @@ const ActivityDetailModal = ({
                   setFormData((prev) => (prev ? { ...prev, title: e.target.value } : prev))
                 }
               />
-              <button type="button" onClick={() => setCurrentModalActivityId(null)}>
+              <button type="button" onClick={() => setCurrentModalRabitId(null)}>
                 <XMarkIcon className="h-6 w-6 text-gray-500 cursor-pointer" />
               </button>
             </div>
@@ -131,14 +128,14 @@ const ActivityDetailModal = ({
         <div className="mt-4 flex justify-end gap-2">
           <button
             type="button"
-            onClick={handleUpdateActivity}
+            onClick={handleUpdateRabit}
             className="cursor-pointer border-2 p-1 border-emerald-600 hover:text-white hover:bg-emerald-600"
           >
             save changes
           </button>
           <button
             type="button"
-            onClick={handleDeleteActivity}
+            onClick={handleDeleteRabit}
             className="cursor-pointer border-2 p-1 border-red-600 hover:text-white hover:bg-red-600"
           >
             delete
@@ -149,4 +146,4 @@ const ActivityDetailModal = ({
   )
 }
 
-export default ActivityDetailModal
+export default RabitDetailModal

@@ -20,7 +20,7 @@ const LoginOrRegister: FC = () => {
 
   useLayoutEffect(() => {
     if (isAuthorized) {
-      navigate('/activities')
+      navigate('/rabits')
     }
   }, [isAuthorized, navigate])
 

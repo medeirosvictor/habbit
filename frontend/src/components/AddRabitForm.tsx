@@ -1,30 +1,30 @@
 import { useState, type FormEvent, type FC } from 'react'
-import { useActivityContext } from '@/hooks/useActivityContext'
+import { useRabitContext } from '@/hooks/useRabitContext'
 
-export const AddActivityForm: FC = () => {
+export const AddRabitForm: FC = () => {
   const [title, setTitle] = useState<string>('')
-  const { onCreateActivity } = useActivityContext()
+  const { onCreateRabit } = useRabitContext()
 
-  const handleAddActivity = async (e: FormEvent) => {
+  const handleAddRabit = async (e: FormEvent) => {
     e.preventDefault()
     if (!title) return
-    await onCreateActivity(title)
+    await onCreateRabit(title)
     setTitle('')
   }
 
   return (
     <div>
-      <form onSubmit={handleAddActivity}>
+      <form onSubmit={handleAddRabit}>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full focus:border-0 p-2"
           type="text"
-          placeholder="add a new activity 🐇"
+          placeholder="add a new rabit 🐇"
         />
       </form>
     </div>
   )
 }
 
-export default AddActivityForm
+export default AddRabitForm
