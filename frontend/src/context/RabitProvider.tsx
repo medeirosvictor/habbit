@@ -24,7 +24,7 @@ export function RabitProvider({ children }: { children: ReactNode }) {
 
   const updateMessage = (msg: MessageTypes) => {
     setMessage(msg)
-    setTimeout(() => setMessage(null), 2500)
+    setTimeout(() => setMessage(null), 3500)
   }
 
   const onFetchRabit = async (id: number) => {
@@ -114,12 +114,13 @@ export function RabitProvider({ children }: { children: ReactNode }) {
       .put(`/api/rabits/update/${id}/`, updatedRabit)
       .then((res) => {
         if (res.status === 200) {
-          updateMessage({ type: 'success', text: 'Rabit updated: ' + res.data })
           setRabits((prev) =>
             prev.map((rabit) =>
               rabit.id === updatedRabit.id ? { ...rabit, ...updatedRabit } : rabit,
             ),
           )
+          console.log('Rabit updated: ', res.data)
+          updateMessage({ type: 'success', text: 'Rabit updated: ' + res.data })
         } else {
           updateMessage({ type: 'error', text: 'Update failed' })
         }

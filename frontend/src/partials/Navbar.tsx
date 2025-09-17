@@ -52,7 +52,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
             ) : (
               <div className="flex justify-between">
                 <button
-                  className="rounded-full bg-[#467ab8] p-2"
+                  className="rounded-full bg-[#467ab8] p-2 cursor-pointer"
                   onClick={() => setIsMenuToggled(!isMenuToggled)}
                 >
                   <Bars3Icon className="h-6 w-6 text-white" />

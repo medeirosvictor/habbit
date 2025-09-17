@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, type FormEvent } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
 import { type RabitData } from '@/shared/types'
 import { useRabitContext } from '@/hooks/useRabitContext'
@@ -41,22 +41,11 @@ const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetai
 
   const { id, title, description, is_habit, completed, shared, times_completed } = formData
 
-  const updateLastUpdated = () => {
-    setFormData((prev) => (prev ? { ...prev, last_updated: new Date() } : prev))
-  }
-
   const handleUpdateRabit = () => {
-    updateLastUpdated()
-    setTimeout(() => {
-      setFormData((prev) => {
-        if (prev) onUpdateRabit(prev)
-        return prev
-      })
-    }, 0)
-  }
-
-  const handleEditFormSubmit = (e: FormEvent) => {
-    e.preventDefault()
+    if (!formData) return
+    const updated = { ...formData, last_updated: new Date() }
+    setFormData(updated)
+    onUpdateRabit(updated)
   }
 
   const handleDeleteRabit = () => {
@@ -68,7 +57,7 @@ const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetai
     <div className="absolute left-0 right-0 top-1/4 z-50 flex items-center justify-center max-w-md mx-auto">
       <div className="bg-amber-50 border-1 rounded-lg p-6 w-full max-h-[80vh] overflow-y-auto shadow-ld">
         <div className="flex flex-col gap-3 mb-4">
-          <form className="flex flex-col justify-center gap-3" onSubmit={handleEditFormSubmit}>
+          <form className="flex flex-col justify-center gap-3">
             <div className="flex justify-between">
               <input
                 className="text-xl font-bold p-1 w-[300px] overflow-ellipsis focus-within:text-sm"

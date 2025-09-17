@@ -1,6 +1,5 @@
 import RabitTable from '@/components/RabitTable'
 import { useRabitContext } from '@/hooks/useRabitContext'
-import { get } from 'http'
 import { useEffect } from 'react'
 
 function Rabits() {

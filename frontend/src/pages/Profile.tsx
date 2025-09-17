@@ -1,9 +1,11 @@
 import { ACCESS_TOKEN } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect, useState } from 'react'
+import { type ProfileData } from '@/shared/types'
 
 const Profile = () => {
   const { getCurrentProfile, loggedUser } = useAuth()
+  const [formData, setFormData] = useState<ProfileData | null>(null)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const flexCenter = 'flex items-center justify-center'
 
