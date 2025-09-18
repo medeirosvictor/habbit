@@ -11,7 +11,7 @@ export default function Layout() {
   const { isAuthorized } = useAuth()
 
   return (
-    <div className="flex flex-col min-h-screen relative bg-linear-to-b from-emerald-400 to-teal-50">
+    <div className="flex flex-col min-h-screen relative bg-linear-to-b from-emerald-200 to-teal-50">
       {/* Centered background logo */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <img src={Logo} alt="Logo" className="w-1/3 opacity-5" />

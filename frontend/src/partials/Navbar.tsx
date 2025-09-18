@@ -23,7 +23,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
   return (
     <>
       <nav
-        className={`${navbarBackground} ${flexBetween} h-[70px] sticky top-0 z-30 w-full py-5 transition duration-400 bg-transparent text-white`}
+        className={`${navbarBackground} ${flexBetween} h-[70px] sticky top-0 z-30 w-full py-5 transition duration-400 bg-transparent`}
       >
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
