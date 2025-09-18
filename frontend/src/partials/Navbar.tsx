@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid'
 import Logo from '@/assets/logo.png'
-import Link from '@/components/Link'
+import { Link } from 'react-router'
 import type { SelectedPage } from '@/shared/types'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { useAuth } from '@/hooks/useAuth'
+import { ActiveLink } from '@/components/ActiveLink'
 
 interface NavbarProps {
   isTopOfPage: boolean
@@ -27,18 +28,21 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
             {/* Left side nav */}
-            <img className="md:w-[100px] w-[60px]" src={Logo} alt="logo" />
-
-            <h1 className="text-3xl">Habbit</h1>
+            <Link to="/rabits">
+              <img className="md:w-[100px] w-[60px]" src={Logo} alt="logo" />
+            </Link>
+            <Link to="/rabits">
+              <h1 className="text-3xl font-extrabold">Habbit</h1>
+            </Link>
             {/* Right side nav */}
             {isAboveMediumScreens ? (
               <div className={`${flexBetween} w-full`}>
                 <div className={`${flexBetween} gap-8 text-sm`}>
-                  <Link page="rabits" name="rabits" />
-                  <Link page="shared" name="shared" />
-                  <Link page="friends" name="friends" />
-                  <Link page="profile" name="profile" />
-                  <Link page="about" name="about" />
+                  <ActiveLink to="/rabits">rabits</ActiveLink>
+                  <ActiveLink to="/shared">shared</ActiveLink>
+                  <ActiveLink to="/friends">friends</ActiveLink>
+                  <ActiveLink to="/profile">profile</ActiveLink>
+                  <ActiveLink to="/about">about</ActiveLink>
                 </div>
                 <div className={`${flexBetween} gap-8 text-sm`}>
                   <button
@@ -71,11 +75,11 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
             </button>
           </div>
           <div className="ml-[33%] flex flex-col text-xl gap-10">
-            <Link page="rabits" name="rabits" />
-            <Link page="shared" name="shared" />
-            <Link page="friends" name="friends" />
-            <Link page="profile" name="profile" />
-            <Link page="about" name="about" />
+            <ActiveLink to="/rabits">rabits</ActiveLink>
+            <ActiveLink to="/shared">shared</ActiveLink>
+            <ActiveLink to="/friends">friends</ActiveLink>
+            <ActiveLink to="/profile">profile</ActiveLink>
+            <ActiveLink to="/about">about</ActiveLink>
             <button
               className="border-1 p-2 w-[100px] text-red-400 font-bold"
               onClick={isAuthorized ? logout : undefined}

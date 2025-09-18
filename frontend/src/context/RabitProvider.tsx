@@ -2,6 +2,7 @@ import { RabitContext } from './RabitContextObject'
 import type { RabitContextType } from './RabitTypes'
 import type { RabitData, MessageTypes } from '@/shared/types'
 import { type ReactNode, useState, useRef, useEffect } from 'react'
+import { isSameDay } from '@/utils/date'
 import api from '@/api'
 
 export function RabitProvider({ children }: { children: ReactNode }) {
@@ -10,17 +11,25 @@ export function RabitProvider({ children }: { children: ReactNode }) {
   const [message, setMessage] = useState<MessageTypes | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
+  // To keep track of last day without causing re-renders
   useEffect(() => {
     timerRef.current = setInterval(() => {
       const todayString = new Date().toDateString()
       if (todayString !== currentDay) {
         setCurrentDay(todayString)
+        onDayChangeRabitUpdate()
       }
-    }, 60 * 1000) // check every minute
+    }, 60 * 1000)
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
   }, [currentDay])
+
+  // On initial load or page refresh, check if habits need to be reset
+  useEffect(() => {
+    if (rabits.length === 0) return
+    onDayChangeRabitUpdate()
+  }, [])
 
   const updateMessage = (msg: MessageTypes) => {
     setMessage(msg)
@@ -91,22 +100,17 @@ export function RabitProvider({ children }: { children: ReactNode }) {
     }
 
     const { id, last_completed, completed } = updatedRabit
-    const lastCompletedDate = new Date(last_completed || '')
     const today = new Date()
 
     if (completed) {
-      if (last_completed) {
-        if (lastCompletedDate.toDateString() === today.toDateString()) {
-          updateMessage({
-            type: 'error',
-            text: 'Rabit already completed today. No update to times_completed made.',
-          })
-        } else {
-          updatedRabit.times_completed += 1
-        }
+      if (last_completed && isSameDay(last_completed, today)) {
+        updateMessage({
+          type: 'error',
+          text: 'Rabit already completed today. No update to times_completed made.',
+        })
       } else {
-        updatedRabit.last_completed = new Date()
-        updatedRabit.times_completed = 1
+        updatedRabit.times_completed = last_completed ? updatedRabit.times_completed + 1 : 1
+        updatedRabit.last_completed = today
       }
     }
 
