@@ -1,3 +1,5 @@
+import type { AuthError, User, AuthSession } from '@supabase/supabase-js'
+
 export enum SelectedPage {
   rabits = 'rabits',
   contactus = 'contactus',
@@ -30,4 +32,20 @@ export interface ProfileData {
 export interface MessageTypes {
   type: 'success' | 'error' | 'info'
   text: string
+}
+
+export type RegisterResult = {
+  error: AuthError | Error | null
+  data: {
+    user: User | null
+    session: AuthSession | null
+  } | null
+}
+
+export type LoginResult = {
+  error: AuthError | Error | null
+  data: {
+    user: User | null
+    session: AuthSession | null
+  } | null
 }

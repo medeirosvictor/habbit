@@ -1,40 +1,50 @@
 import { useState, type FormEvent } from 'react'
-import api from '@/api'
 import { useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import axios from 'axios'
 
 type Props = {
-  route: string
   method: string
   setErrorMessage: (message: string) => void
 }
 
-const AccountForm = ({ route, method, setErrorMessage }: Props) => {
-  const [username, setUsername] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+const AccountForm = ({ method, setErrorMessage }: Props) => {
   const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
   const formName = method === 'login' ? 'Login' : 'Register'
-  const { login } = useAuth()
+  const { login, register } = useAuth()
 
   const handleSubmit = async (e: FormEvent) => {
     setLoading(true)
     e.preventDefault()
 
     try {
-      const res = await api.post(route, { username, password, email })
-
-      if (res.status == 200 || res.status === 201) {
-        await login(res.data.access, res.data.refresh)
+      if (method === 'register') {
+        const { error, data } = await register(email, password)
+        if (error) {
+          setErrorMessage(error.message)
+          setLoading(false)
+          return
+        }
+        if (data?.user) {
+          await login(data.user.email, password)
+          navigate('/rabits')
+        }
+      } else {
+        const { error, data } = await login(email, password)
+        if (error) {
+          setErrorMessage(error.message)
+          setLoading(false)
+          return
+        }
         navigate('/rabits')
       }
     } catch (error: Error | unknown) {
-      if (axios.isAxiosError(error)) {
-        setErrorMessage(error.response?.data?.detail)
-        localStorage.clear()
-      }
+      setErrorMessage(
+        error instanceof Error ? error.message : 'An unknown error occurred during registration.',
+      )
     } finally {
       setLoading(false)
     }
@@ -46,11 +56,11 @@ const AccountForm = ({ route, method, setErrorMessage }: Props) => {
       <h1 className="text-5xl">Habbit</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-1 justify-center items-center">
         <input
-          id="username"
+          id="email"
           type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
           className="border-1 border-violet-700 p-1"
         />
         <input
@@ -61,18 +71,6 @@ const AccountForm = ({ route, method, setErrorMessage }: Props) => {
           placeholder="Password"
           className="border-1 border-violet-700 p-1"
         />
-        {method === 'register' && (
-          <>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="email"
-              onChange={(e) => setEmail(e.target.value)}
-              className="border-1 border-violet-700 p-1"
-            />
-          </>
-        )}
         <button
           className={`cursor-pointer border-1 border-emerald-600 p-2 mt-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white ${method === 'register' ? 'bg-emerald-600 text-white' : ''}`}
           type="submit"

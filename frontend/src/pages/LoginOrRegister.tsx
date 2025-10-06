@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router'
 const LoginOrRegister: FC = () => {
   const [isRegister, setIsRegister] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [method, setMethod] = useState<'login' | 'register'>('login')
   const { isAuthorized } = useAuth()
   const navigate = useNavigate()
 
@@ -27,18 +28,14 @@ const LoginOrRegister: FC = () => {
   return (
     <div className="w-5/6 h-5/6 mx-auto flex flex-col justify-center items-center">
       <img src={Logo} alt="habbit-logo" />
-      <div>
-        {isRegister ? (
-          <AccountForm
-            route="/api/user/register/"
-            method="register"
-            setErrorMessage={setErrorMessage}
-          />
-        ) : (
-          <AccountForm route="/api/token/" method="login" setErrorMessage={setErrorMessage} />
-        )}
-      </div>
-      <button onClick={() => setIsRegister(!isRegister)} className="underline mt-4">
+      <AccountForm method={method} setErrorMessage={setErrorMessage} />
+      <button
+        onClick={() => {
+          setIsRegister(!isRegister)
+          setMethod(isRegister ? 'login' : 'register')
+        }}
+        className="underline mt-4 cursor-pointer"
+      >
         {isRegister ? 'Already have an account? Login' : "Don't have an account? Register"}
       </button>
 

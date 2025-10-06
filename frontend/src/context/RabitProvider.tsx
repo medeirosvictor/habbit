@@ -1,15 +1,42 @@
 import { RabitContext } from './RabitContextObject'
 import type { RabitContextType } from './RabitTypes'
 import type { RabitData, MessageTypes } from '@/shared/types'
-import { type ReactNode, useState, useRef, useEffect } from 'react'
+import { type ReactNode, useState, useRef, useEffect, useCallback } from 'react'
 import { isSameDay } from '@/utils/date'
 import api from '@/api'
+import { supabase } from '@/supabase-client'
 
 export function RabitProvider({ children }: { children: ReactNode }) {
   const [rabits, setRabits] = useState<Array<RabitData>>([])
   const [currentDay, setCurrentDay] = useState<string>(new Date().toDateString())
   const [message, setMessage] = useState<MessageTypes | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Stable callback for day change update
+  const onDayChangeRabitUpdate = useCallback(() => {
+    api
+      .get('/api/rabits/')
+      .then((res) => res.data)
+      .then((data) => {
+        data.sort((a: RabitData, b: RabitData) => {
+          if (a.is_habit && !b.is_habit) return -1
+          if (!a.is_habit && b.is_habit) return 1
+          return 0
+        })
+        const today = new Date(currentDay)
+        data.forEach((rabit: RabitData) => {
+          const lastUpdated = new Date(rabit.last_updated)
+          if (lastUpdated.toDateString() !== today.toDateString()) {
+            rabit.completed = false
+            api.put(`/api/rabits/update/${rabit.id}/`, rabit).catch((err) => {
+              console.log(err)
+            })
+          }
+        })
+        setRabits(data)
+      })
+      .catch((err) => console.log(err))
+  }, [currentDay])
 
   // To keep track of last day without causing re-renders
   useEffect(() => {
@@ -23,13 +50,13 @@ export function RabitProvider({ children }: { children: ReactNode }) {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current)
     }
-  }, [currentDay])
+  }, [currentDay, onDayChangeRabitUpdate])
 
   // On initial load or page refresh, check if habits need to be reset
   useEffect(() => {
     if (rabits.length === 0) return
     onDayChangeRabitUpdate()
-  }, [])
+  }, [onDayChangeRabitUpdate, rabits.length])
 
   const updateMessage = (msg: MessageTypes) => {
     setMessage(msg)
@@ -50,33 +77,6 @@ export function RabitProvider({ children }: { children: ReactNode }) {
     const res = await api.get('/api/rabits/')
     if (res.status !== 200) return
     setRabits(res.data)
-  }
-
-  const onDayChangeRabitUpdate = async () => {
-    api
-      .get('/api/rabits/')
-      .then((res) => res.data)
-      .then((data) => {
-        data.sort((a: RabitData, b: RabitData) => {
-          if (a.is_habit && !b.is_habit) return -1
-          if (!a.is_habit && b.is_habit) return 1
-          return 0
-        })
-
-        // Only reset completed if last_updated is not today
-        const today = new Date(currentDay)
-        data.forEach((rabit: RabitData) => {
-          const lastUpdated = new Date(rabit.last_updated)
-          if (lastUpdated.toDateString() !== today.toDateString()) {
-            rabit.completed = false
-            api.put(`/api/rabits/update/${rabit.id}/`, rabit).catch((err) => {
-              console.log(err)
-            })
-          }
-        })
-        setRabits(data)
-      })
-      .catch((err) => console.log(err))
   }
 
   const onDeleteRabit = (id: number) => {
@@ -132,16 +132,29 @@ export function RabitProvider({ children }: { children: ReactNode }) {
       .catch((err) => console.log(err))
   }
 
-  const onCreateRabit = (title: string) => {
-    api
-      .post('/api/rabits/', { title })
-      .then((res) => {
-        if (res.status === 201) {
-          updateMessage({ type: 'success', text: 'rabit created' })
-          setRabits((prev) => [...prev, res.data])
-        } else console.log('failed to create')
-      })
-      .catch((err) => console.log(err))
+  const onCreateRabit = async (title: string) => {
+    const { error, data } = await supabase.from('habbits').insert({ title }).single()
+    if (error || !data) {
+      console.log('Error creating rabit:', error)
+      updateMessage({ type: 'error', text: 'Failed to create rabit' })
+      return
+    }
+
+    const rabitData = data as Partial<RabitData>
+    const newRabit: RabitData = {
+      id: rabitData.id!,
+      title: rabitData.title!,
+      description: rabitData.description ?? '',
+      is_habit: rabitData.is_habit ?? false,
+      created_at: rabitData.created_at ? new Date(rabitData.created_at) : new Date(),
+      last_updated: rabitData.last_updated ? new Date(rabitData.last_updated) : new Date(),
+      times_completed: rabitData.times_completed ?? 0,
+      completed: rabitData.completed ?? false,
+      shared: rabitData.shared ?? false,
+      last_completed: rabitData.last_completed ? new Date(rabitData.last_completed) : null,
+    }
+    setRabits((prev) => [...prev, newRabit])
+    updateMessage({ type: 'success', text: 'Rabit created' })
   }
 
   const checkForSharedRabits = (rabits: Array<RabitData>) => {

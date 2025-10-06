@@ -1,10 +1,8 @@
 import { type ReactNode, useState, useEffect } from 'react'
-import api from '@/api'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/constants'
-import { isTokenExpired } from '@/utils/auth'
 import { AuthContext } from './AuthContextObject'
 import type { AuthContextType } from './AuthTypes'
-import type { ProfileData } from '@/shared/types'
+import type { ProfileData, RegisterResult, LoginResult } from '@/shared/types'
+import { supabase } from '@/supabase-client'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
@@ -15,31 +13,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const checkAuth = async () => {
-    const token = localStorage.getItem(ACCESS_TOKEN)
+    const token = (await supabase.auth.getSession()).data.session?.access_token
     if (!token) return setIsAuthorized(false)
-
-    if (isTokenExpired(token)) {
-      await refreshToken()
-    } else {
-      setIsAuthorized(true)
-    }
-  }
-
-  const refreshToken = async () => {
-    const refresh = localStorage.getItem(REFRESH_TOKEN)
-    if (!refresh) return setIsAuthorized(false)
-
-    try {
-      const res = await api.post('/api/token/refresh/', { refresh })
-      if (res.status === 200) {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access)
-        setIsAuthorized(true)
-      } else {
-        setIsAuthorized(false)
-      }
-    } catch {
-      setIsAuthorized(false)
-    }
+    setIsAuthorized(true)
   }
 
   const getCurrentProfile = async (accessToken: string) => {
@@ -54,21 +30,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const login = async (access: string, refresh: string) => {
-    localStorage.setItem(ACCESS_TOKEN, access)
-    localStorage.setItem(REFRESH_TOKEN, refresh)
+  const register = async (email: string, password: string): Promise<RegisterResult> => {
     try {
-      getCurrentProfile(access)
+      const { error: signUpError, data } = await supabase.auth.signUp({ email, password })
+      if (signUpError) {
+        setIsAuthorized(false)
+        return { error: signUpError, data: null }
+      }
       setIsAuthorized(true)
+      return { error: null, data }
     } catch (err) {
-      console.log('Login failed: ' + err)
       setIsAuthorized(false)
-      localStorage.clear()
+      if (err instanceof Error) {
+        return { error: err, data: null }
+      }
+      return { error: new Error(String(err)), data: null }
     }
   }
 
+  const login = async (email: string, password: string): Promise<LoginResult> => {
+    const { error: signUpError, data } = await supabase.auth.signInWithPassword({ email, password })
+    if (signUpError) {
+      console.log('Login error: ' + signUpError.message)
+      setIsAuthorized(false)
+      return { error: signUpError, data: null }
+    }
+    setIsAuthorized(true)
+    return { error: null, data }
+  }
+
   const logout = () => {
+    supabase.auth.signOut().catch((err) => console.log('Logout error: ' + err.message))
     localStorage.clear()
+    setLoggedUser({} as ProfileData)
     setIsAuthorized(false)
   }
 
@@ -85,8 +79,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const contextValue: AuthContextType = {
     isAuthorized,
     logout,
-    refreshToken,
     login,
+    register,
     loggedUser,
     getUserProfile,
     getCurrentProfile,
