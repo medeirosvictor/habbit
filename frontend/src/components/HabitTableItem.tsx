@@ -1,32 +1,32 @@
 import { useState } from 'react'
-import { type RabitData } from '@/shared/types'
+import { type HabitData } from '@/shared/types'
 import { EMOJIS } from '@/constants'
 import PomodoroTimer from './PomodoroTimer'
-import { useRabitContext } from '@/hooks/useRabitContext'
+import { useHabitContext } from '@/hooks/useHabitContext'
 
-interface RabitTableItemProps {
-  rabit: RabitData
-  currentRabitId: number | null
-  setCurrentModalRabitId: (id: number | null) => void
+interface HabitTableItemProps {
+  habit: HabitData
+  currentHabitId: number | null
+  setCurrentModalHabitId: (id: number | null) => void
 }
 
-function RabitTableItem({ rabit, currentRabitId, setCurrentModalRabitId }: RabitTableItemProps) {
-  const { title, is_habit, completed, id } = rabit
+function HabitTableItem({ habit, currentHabitId, setCurrentModalHabitId }: HabitTableItemProps) {
+  const { title, is_habit, completed, id } = habit
   const [pomodoroTimer, setPomodoroTimer] = useState<boolean>(false)
   const statusEmoji = completed ? EMOJIS.complete : EMOJIS.pending
 
-  const { onUpdateRabit } = useRabitContext()
+  const { onUpdateHabit } = useHabitContext()
 
   const toggleDetail = () => {
-    if (currentRabitId === id) {
-      setCurrentModalRabitId(null)
+    if (currentHabitId === id) {
+      setCurrentModalHabitId(null)
       return
     }
-    setCurrentModalRabitId(id)
+    setCurrentModalHabitId(id)
   }
 
-  const handleCompleteRabit = () => {
-    onUpdateRabit({} as RabitData, id)
+  const handleCompleteHabit = () => {
+    onUpdateHabit({} as HabitData, id)
   }
 
   return (
@@ -45,7 +45,7 @@ function RabitTableItem({ rabit, currentRabitId, setCurrentModalRabitId }: Rabit
         )}
         <div>
           <ul className="flex gap-1">
-            <li className="cursor-pointer" onClick={handleCompleteRabit}>
+            <li className="cursor-pointer" onClick={handleCompleteHabit}>
               {statusEmoji}
             </li>
             {!completed && (
@@ -63,4 +63,4 @@ function RabitTableItem({ rabit, currentRabitId, setCurrentModalRabitId }: Rabit
   )
 }
 
-export default RabitTableItem
+export default HabitTableItem

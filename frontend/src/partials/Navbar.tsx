@@ -28,17 +28,17 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
         <div className={`${flexBetween} mx-auto w-5/6`}>
           <div className={`${flexBetween} w-full gap-16`}>
             {/* Left side nav */}
-            <Link to="/rabits">
+            <Link to="/">
               <img className="md:w-[100px] w-[60px]" src={Logo} alt="logo" />
             </Link>
-            <Link to="/rabits">
+            <Link to="/">
               <h1 className="text-3xl font-extrabold">Habbit</h1>
             </Link>
             {/* Right side nav */}
             {isAboveMediumScreens ? (
               <div className={`${flexBetween} w-full`}>
                 <div className={`${flexBetween} gap-8 text-sm`}>
-                  <ActiveLink to="/rabits">rabits</ActiveLink>
+                  <ActiveLink to="/">habits</ActiveLink>
                   <ActiveLink to="/shared">shared</ActiveLink>
                   <ActiveLink to="/friends">friends</ActiveLink>
                   <ActiveLink to="/profile">profile</ActiveLink>
@@ -46,7 +46,7 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
                 </div>
                 <div className={`${flexBetween} gap-8 text-sm`}>
                   <button
-                    className="w-[80px] text-red-400 font-bold underline"
+                    className="w-[80px] text-red-400 font-bold cursor-pointer underline"
                     onClick={isAuthorized ? logout : undefined}
                   >
                     {isAuthorized ? 'Logout' : 'Login'}
@@ -75,13 +75,13 @@ const Navbar = ({ isTopOfPage }: NavbarProps) => {
             </button>
           </div>
           <div className="ml-[33%] flex flex-col text-xl gap-10">
-            <ActiveLink to="/rabits">rabits</ActiveLink>
+            <ActiveLink to="/">habits</ActiveLink>
             <ActiveLink to="/shared">shared</ActiveLink>
             <ActiveLink to="/friends">friends</ActiveLink>
             <ActiveLink to="/profile">profile</ActiveLink>
             <ActiveLink to="/about">about</ActiveLink>
             <button
-              className="border-1 p-2 w-[100px] text-red-400 font-bold"
+              className="border-1 p-2 w-[100px] text-red-400 font-bold cursor-pointer"
               onClick={isAuthorized ? logout : undefined}
             >
               {isAuthorized ? 'Logout' : 'Login'}

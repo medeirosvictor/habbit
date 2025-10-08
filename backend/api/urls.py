@@ -2,10 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('rabits/', views.RabitListCreate.as_view(), name='rabit-list'),
-    path('rabits/<int:pk>/', views.RabitDetail.as_view(), name='rabit-detail'),
-    path('rabits/delete/<int:pk>/', views.RabitDelete.as_view(), name='rabit-delete'),
-    path('rabits/update/<int:pk>/', views.RabitUpdate.as_view(), name='rabit-update'),
+    path('habits/', views.HabitListCreate.as_view(), name='habit-list'),
+    path('habits/<int:pk>/', views.HabitDetail.as_view(), name='habit-detail'),
+    path('habits/delete/<int:pk>/', views.HabitDelete.as_view(), name='habit-delete'),
+    path('habits/update/<int:pk>/', views.HabitUpdate.as_view(), name='habit-update'),
     path('profile/me/', views.Me.as_view(), name='my-profile'),
     path('profile/<int:pk>/', views.UserDetail.as_view(), name='user-profile'),
 ]

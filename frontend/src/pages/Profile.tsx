@@ -10,8 +10,7 @@ const Profile = () => {
   const flexCenter = 'flex items-center justify-center'
 
   useEffect(() => {
-    const accessToken = localStorage.getItem(ACCESS_TOKEN)
-    if (accessToken) getCurrentProfile(accessToken)
+    getCurrentProfile()
   }, [])
 
   if (!loggedUser) return <div>Loading...</div>

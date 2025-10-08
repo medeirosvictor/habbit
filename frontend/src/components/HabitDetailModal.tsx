@@ -1,24 +1,24 @@
 import { useMemo, useState, useEffect } from 'react'
 import { XMarkIcon } from '@heroicons/react/24/solid'
-import { type RabitData } from '@/shared/types'
-import { useRabitContext } from '@/hooks/useRabitContext'
+import { type HabitData } from '@/shared/types'
+import { useHabitContext } from '@/hooks/useHabitContext'
 
-type RabitDetailModalProps = {
-  currentRabitId: number
-  setCurrentModalRabitId: (id: number | null) => void
+type HabitDetailModalProps = {
+  currentHabitId: number
+  setCurrentModalHabitId: (id: number | null) => void
 }
 
-const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetailModalProps) => {
-  const { onFetchRabit, onDeleteRabit, onUpdateRabit } = useRabitContext()
-  const [formData, setFormData] = useState<RabitData | null>(null)
+const HabitDetailModal = ({ currentHabitId, setCurrentModalHabitId }: HabitDetailModalProps) => {
+  const { onFetchHabit, onDeleteHabit, onUpdateHabit } = useHabitContext()
+  const [formData, setFormData] = useState<HabitData | null>(null)
 
   useEffect(() => {
-    async function fetchRabit() {
-      const data = await onFetchRabit(currentRabitId)
+    async function fetchHabit() {
+      const data = await onFetchHabit(currentHabitId)
       setFormData(data ?? null)
     }
-    fetchRabit()
-  }, [currentRabitId])
+    fetchHabit()
+  }, [currentHabitId])
 
   const createdDate = useMemo(
     () => (formData ? new Date(formData.created_at) : new Date()),
@@ -41,16 +41,16 @@ const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetai
 
   const { id, title, description, is_habit, completed, shared, times_completed } = formData
 
-  const handleUpdateRabit = () => {
+  const handleUpdateHabit = () => {
     if (!formData) return
     const updated = { ...formData, last_updated: new Date() }
     setFormData(updated)
-    onUpdateRabit(updated)
+    onUpdateHabit(updated)
   }
 
-  const handleDeleteRabit = () => {
-    onDeleteRabit(id)
-    setCurrentModalRabitId(null)
+  const handleDeleteHabit = () => {
+    onDeleteHabit(id)
+    setCurrentModalHabitId(null)
   }
 
   return (
@@ -69,7 +69,7 @@ const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetai
                   setFormData((prev) => (prev ? { ...prev, title: e.target.value } : prev))
                 }
               />
-              <button type="button" onClick={() => setCurrentModalRabitId(null)}>
+              <button type="button" onClick={() => setCurrentModalHabitId(null)}>
                 <XMarkIcon className="h-6 w-6 text-gray-500 cursor-pointer" />
               </button>
             </div>
@@ -117,14 +117,14 @@ const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetai
         <div className="mt-4 flex justify-end gap-2">
           <button
             type="button"
-            onClick={handleUpdateRabit}
+            onClick={handleUpdateHabit}
             className="cursor-pointer border-2 p-1 border-emerald-600 hover:text-white hover:bg-emerald-600"
           >
             save changes
           </button>
           <button
             type="button"
-            onClick={handleDeleteRabit}
+            onClick={handleDeleteHabit}
             className="cursor-pointer border-2 p-1 border-red-600 hover:text-white hover:bg-red-600"
           >
             delete
@@ -135,4 +135,4 @@ const RabitDetailModal = ({ currentRabitId, setCurrentModalRabitId }: RabitDetai
   )
 }
 
-export default RabitDetailModal
+export default HabitDetailModal

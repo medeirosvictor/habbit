@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth'
 import Logo from '@/assets/logo.png'
 
 export default function Layout() {
-  const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.rabits)
+  const [selectedPage, setSelectedPage] = useState<SelectedPage>(SelectedPage.habits)
   const { isAuthorized } = useAuth()
 
   return (

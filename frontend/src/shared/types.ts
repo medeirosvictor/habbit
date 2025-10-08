@@ -1,13 +1,11 @@
-import type { AuthError, User, AuthSession } from '@supabase/supabase-js'
-
 export enum SelectedPage {
-  rabits = 'rabits',
+  habits = 'habits',
   contactus = 'contactus',
   shared = 'shared',
   about = 'about',
 }
 
-export interface RabitData {
+export interface HabitData {
   id: number
   title: string
   description: string
@@ -25,27 +23,11 @@ export interface ProfileData {
   username: string
   email: string
   friends: Array<number>
-  rabits: Array<number>
+  habits: Array<number>
   avatar_url: string | undefined
 }
 
 export interface MessageTypes {
   type: 'success' | 'error' | 'info'
   text: string
-}
-
-export type RegisterResult = {
-  error: AuthError | Error | null
-  data: {
-    user: User | null
-    session: AuthSession | null
-  } | null
-}
-
-export type LoginResult = {
-  error: AuthError | Error | null
-  data: {
-    user: User | null
-    session: AuthSession | null
-  } | null
 }

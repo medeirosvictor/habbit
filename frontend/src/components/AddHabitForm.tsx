@@ -1,30 +1,30 @@
 import { useState, type FormEvent, type FC } from 'react'
-import { useRabitContext } from '@/hooks/useRabitContext'
+import { useHabitContext } from '@/hooks/useHabitContext'
 
-export const AddRabitForm: FC = () => {
+export const AddHabitForm: FC = () => {
   const [title, setTitle] = useState<string>('')
-  const { onCreateRabit } = useRabitContext()
+  const { onCreateHabit } = useHabitContext()
 
-  const handleAddRabit = async (e: FormEvent) => {
+  const handleAddHabit = async (e: FormEvent) => {
     e.preventDefault()
     if (!title) return
-    await onCreateRabit(title)
+    await onCreateHabit(title)
     setTitle('')
   }
 
   return (
     <div>
-      <form onSubmit={handleAddRabit}>
+      <form onSubmit={handleAddHabit}>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="w-full focus:border-0 p-2"
           type="text"
-          placeholder="add a new rabit 🐇"
+          placeholder="add a new habit 🐇"
         />
       </form>
     </div>
   )
 }
 
-export default AddRabitForm
+export default AddHabitForm

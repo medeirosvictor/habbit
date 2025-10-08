@@ -1,7 +1,7 @@
 import { type ReactNode, useState, useEffect } from 'react'
 import { AuthContext } from './AuthContextObject'
 import type { AuthContextType } from './AuthTypes'
-import type { ProfileData, RegisterResult, LoginResult } from '@/shared/types'
+import type { ProfileData } from '@/shared/types'
 import { supabase } from '@/supabase-client'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -18,45 +18,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthorized(true)
   }
 
-  const getCurrentProfile = async (accessToken: string) => {
+  const getCurrentProfile = async () => {
     try {
-      const res = await api.get('/api/profile/me/', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
-      setLoggedUser(res.data)
+      const data = await supabase.auth.getUser()
+      if (!data.data.user) {
+        setIsAuthorized(false)
+        return
+      }
+      console.log(data)
+      setLoggedUser(data.data.user)
     } catch (err) {
       console.log('Get current profile failed: ' + err)
       localStorage.clear()
     }
   }
 
-  const register = async (email: string, password: string): Promise<RegisterResult> => {
+  const register = async (email: string, password: string): Promise<boolean> => {
     try {
-      const { error: signUpError, data } = await supabase.auth.signUp({ email, password })
+      const { error: signUpError } = await supabase.auth.signUp({ email, password })
       if (signUpError) {
         setIsAuthorized(false)
-        return { error: signUpError, data: null }
+        return false
       }
       setIsAuthorized(true)
-      return { error: null, data }
+      return true
     } catch (err) {
       setIsAuthorized(false)
       if (err instanceof Error) {
-        return { error: err, data: null }
+        return false
       }
-      return { error: new Error(String(err)), data: null }
+      return false
     }
   }
 
-  const login = async (email: string, password: string): Promise<LoginResult> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     const { error: signUpError, data } = await supabase.auth.signInWithPassword({ email, password })
     if (signUpError) {
       console.log('Login error: ' + signUpError.message)
       setIsAuthorized(false)
-      return { error: signUpError, data: null }
+      return false
     }
     setIsAuthorized(true)
-    return { error: null, data }
+    return true
   }
 
   const logout = () => {

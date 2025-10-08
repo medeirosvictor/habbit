@@ -1,52 +1,31 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type FormEvent, type SubmitEvent } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuth } from '@/hooks/useAuth'
 import axios from 'axios'
 
 type Props = {
-  method: string
   setErrorMessage: (message: string) => void
 }
 
-const AccountForm = ({ method, setErrorMessage }: Props) => {
+const AccountForm = ({ setErrorMessage }: Props) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const navigate = useNavigate()
-  const formName = method === 'login' ? 'Login' : 'Register'
   const { login, register } = useAuth()
 
   const handleSubmit = async (e: FormEvent) => {
     setLoading(true)
     e.preventDefault()
+    const method = (e.nativeEvent as SubmitEvent).submitter.value
+    console.log(method)
+    const success =
+      method === 'register' ? await register(email, password) : await login(email, password)
 
-    try {
-      if (method === 'register') {
-        const { error, data } = await register(email, password)
-        if (error) {
-          setErrorMessage(error.message)
-          setLoading(false)
-          return
-        }
-        if (data?.user) {
-          await login(data.user.email, password)
-          navigate('/rabits')
-        }
-      } else {
-        const { error, data } = await login(email, password)
-        if (error) {
-          setErrorMessage(error.message)
-          setLoading(false)
-          return
-        }
-        navigate('/rabits')
-      }
-    } catch (error: Error | unknown) {
-      setErrorMessage(
-        error instanceof Error ? error.message : 'An unknown error occurred during registration.',
-      )
-    } finally {
-      setLoading(false)
+    if (success) {
+      navigate('/')
+    } else {
+      setErrorMessage(`${method} failed. please check your credentials or email confirmation.`)
     }
   }
 
@@ -71,12 +50,22 @@ const AccountForm = ({ method, setErrorMessage }: Props) => {
           placeholder="Password"
           className="border-1 border-violet-700 p-1"
         />
-        <button
-          className={`cursor-pointer border-1 border-emerald-600 p-2 mt-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white ${method === 'register' ? 'bg-emerald-600 text-white' : ''}`}
-          type="submit"
-        >
-          {formName}
-        </button>
+        <div className="flex gap-4">
+          <button
+            className={`cursor-pointer border-1 border-emerald-600 p-2 mt-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white`}
+            type="submit"
+            value="login"
+          >
+            Login
+          </button>
+          <button
+            className={`cursor-pointer border-1 border-emerald-600 p-2 mt-2 hover:border-emerald-950 hover:bg-violet-900 hover:text-white bg-emerald-600 text-white`}
+            type="submit"
+            value="register"
+          >
+            Register
+          </button>
+        </div>
       </form>
     </div>
   )

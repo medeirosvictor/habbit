@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Rabit, Profile
+from .models import Habit, Profile
 
 
 # For registration (POST)
@@ -38,8 +38,8 @@ class PublicProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ["id", "username", "avatar_url"]
 
-class RabitSerializer(serializers.ModelSerializer):
+class habitserializer(serializers.ModelSerializer):
     class Meta:
-        model = Rabit
+        model = Habit
         fields = ['id', 'title', 'description', 'created_at', 'last_updated', 'completed', 'is_habit', 'author', 'shared', 'times_completed', 'last_completed']
         extra_kwargs = {'author': {'read_only': True}}
