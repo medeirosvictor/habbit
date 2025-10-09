@@ -1,7 +1,7 @@
-import { useHabitContext } from '@/hooks/useHabitContext'
+import { useToast } from '@/hooks/useToast'
 
 function Toast() {
-  const { message } = useHabitContext()
+  const { message } = useToast()
   const messageTypeBackground =
     message?.type === 'success'
       ? 'bg-green-500'

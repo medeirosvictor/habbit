@@ -1,6 +1,6 @@
 import { useContext } from 'react'
-import { HabitContext } from '@/context/HabitContextObject'
-import type { HabitContextType } from '@/context/HabitTypes'
+import { HabitContext } from '@/context/habit/HabitContextObject'
+import type { HabitContextType } from '@/context/habit/HabitTypes'
 
 export function useHabitContext(): HabitContextType {
   const ctx = useContext(HabitContext)

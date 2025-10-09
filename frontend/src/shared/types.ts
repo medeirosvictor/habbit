@@ -27,7 +27,7 @@ export interface ProfileData {
   avatar_url: string | undefined
 }
 
-export interface MessageTypes {
+export interface ToastMessageTypes {
   type: 'success' | 'error' | 'info'
   text: string
 }

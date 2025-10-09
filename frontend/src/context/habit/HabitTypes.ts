@@ -1,4 +1,4 @@
-import type { HabitData, MessageTypes } from '@/shared/types'
+import type { HabitData } from '@/shared/types'
 
 export interface HabitContextType {
   onUpdateHabit: (updatedHabit: HabitData, onlyDoneId?: number) => void
@@ -9,8 +9,6 @@ export interface HabitContextType {
   onFetchHabit: (id: number) => Promise<HabitData | undefined>
   habits: Array<HabitData>
   setHabits: React.Dispatch<React.SetStateAction<Array<HabitData>>>
-  message: MessageTypes | null
-  setMessage: React.Dispatch<React.SetStateAction<MessageTypes | null>>
   checkForSharedHabits: (habits: Array<HabitData>) => Array<HabitData>
   getDoneNotHabitHabits: () => Array<HabitData>
   getNotDoneHabits: () => Array<HabitData>

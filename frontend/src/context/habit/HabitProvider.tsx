@@ -1,6 +1,6 @@
 import { HabitContext } from './HabitContextObject'
 import type { HabitContextType } from './HabitTypes'
-import type { HabitData, MessageTypes } from '@/shared/types'
+import type { HabitData } from '@/shared/types'
 import { type ReactNode, useState, useRef, useEffect, useCallback } from 'react'
 import { isSameDay } from '@/utils/date'
 import api from '@/api'
@@ -9,7 +9,6 @@ import { supabase } from '@/supabase-client'
 export function HabitProvider({ children }: { children: ReactNode }) {
   const [habits, setHabits] = useState<Array<HabitData>>([])
   const [currentDay, setCurrentDay] = useState<string>(new Date().toDateString())
-  const [message, setMessage] = useState<MessageTypes | null>(null)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Stable callback for day change update
@@ -57,11 +56,6 @@ export function HabitProvider({ children }: { children: ReactNode }) {
     if (habits.length === 0) return
     onDayChangeHabitUpdate()
   }, [onDayChangeHabitUpdate, habits.length])
-
-  const updateMessage = (msg: MessageTypes) => {
-    setMessage(msg)
-    setTimeout(() => setMessage(null), 3500)
-  }
 
   const onFetchHabit = async (id: number) => {
     try {
@@ -182,8 +176,6 @@ export function HabitProvider({ children }: { children: ReactNode }) {
     setHabits,
     onDayChangeHabitUpdate,
     onFetchHabit,
-    message,
-    setMessage,
     checkForSharedHabits,
     getDoneNotHabitHabits,
     getNotDoneHabits,

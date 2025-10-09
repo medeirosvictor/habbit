@@ -3,10 +3,12 @@ import { AuthContext } from './AuthContextObject'
 import type { AuthContextType } from './AuthTypes'
 import type { ProfileData } from '@/shared/types'
 import { supabase } from '@/supabase-client'
+import { useToast } from '@/hooks/useToast'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null)
-  const [loggedUser, setLoggedUser] = useState<ProfileData>({} as ProfileData)
+  const [loggedUser, setLoggedUser] = useState<ProfileData | null>(null)
+  const { showMessage } = useToast()
 
   useEffect(() => {
     checkAuth()
@@ -18,35 +20,54 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthorized(true)
   }
 
+  // Can only call this if a session is active (i.e., user is logged in) meaning:
+  // we dont need to call another auth check here - we can assume user is logged in
   const getCurrentProfile = async () => {
-    try {
-      const data = await supabase.auth.getUser()
-      if (!data.data.user) {
-        setIsAuthorized(false)
-        return
+    const session = (await supabase.auth.getSession()).data.session
+    if (session) {
+      const userId = session.user.id
+      try {
+        const res = await supabase.from('users').select('*').eq('id', userId).single()
+        console.log('getcurrentprofile', res.data)
+
+        if (!res.data) {
+          setIsAuthorized(false)
+          return false
+        }
+
+        setLoggedUser(res.data as ProfileData)
+        return true
+      } catch (err) {
+        console.log('Get current profile failed: ' + err)
       }
-      console.log(data)
-      setLoggedUser(data.data.user)
-    } catch (err) {
-      console.log('Get current profile failed: ' + err)
-      localStorage.clear()
     }
+    return false
   }
 
   const register = async (email: string, password: string): Promise<boolean> => {
     try {
-      const { error: signUpError } = await supabase.auth.signUp({ email, password })
-      if (signUpError) {
+      const { data, error: signUpError } = await supabase.auth.signUp({ email, password })
+      const session = data.session || (await supabase.auth.getSession()).data.session
+
+      if (signUpError || !data.user || !session) {
+        showMessage({ type: 'error', text: signUpError?.message || 'Signup/data/session failed.' })
         setIsAuthorized(false)
         return false
       }
+
+      const { error: dbError } = await supabase.from('users').insert([{ id: data.user.id, email }])
+
+      if (dbError) {
+        showMessage({ type: 'error', text: dbError.message })
+        setIsAuthorized(false)
+        return false
+      }
+
       setIsAuthorized(true)
       return true
     } catch (err) {
+      showMessage({ type: 'error', text: `Registration failed. ${err}` })
       setIsAuthorized(false)
-      if (err instanceof Error) {
-        return false
-      }
       return false
     }
   }
@@ -58,6 +79,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAuthorized(false)
       return false
     }
+
+    const userResponse = await supabase.from('users').select('*').eq('id', data.user.id).single()
+    console.log('Login data: ', data)
+    if (userResponse.error || !userResponse.data) {
+      setIsAuthorized(false)
+      return false
+    }
+    setLoggedUser(userResponse.data as ProfileData)
     setIsAuthorized(true)
     return true
   }

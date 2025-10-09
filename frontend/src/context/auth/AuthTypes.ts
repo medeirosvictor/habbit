@@ -7,5 +7,5 @@ export interface AuthContextType {
   register: (email: string, password: string) => Promise<RegisterResult>
   getUserProfile: (id: number) => Promise<ProfileData | null>
   loggedUser: ProfileData | null
-  getCurrentProfile: () => void
+  getCurrentProfile: () => boolean
 }

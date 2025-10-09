@@ -1,17 +1,14 @@
-import { ACCESS_TOKEN } from '@/constants'
 import { useAuth } from '@/hooks/useAuth'
 import { useEffect, useState } from 'react'
 import { type ProfileData } from '@/shared/types'
 
 const Profile = () => {
-  const { getCurrentProfile, loggedUser } = useAuth()
+  const { loggedUser } = useAuth()
   const [formData, setFormData] = useState<ProfileData | null>(null)
   const [isEditing, setIsEditing] = useState<boolean>(false)
   const flexCenter = 'flex items-center justify-center'
 
-  useEffect(() => {
-    getCurrentProfile()
-  }, [])
+  console.log('profile page', loggedUser)
 
   if (!loggedUser) return <div>Loading...</div>
   const { id, username, email, avatar_url, friends } = loggedUser
@@ -21,7 +18,7 @@ const Profile = () => {
       <div
         className={`${flexCenter} bg-amber-50 border-1 rounded-lg p-6 w-full max-w-[500px] max-h-[80vh] overflow-y-auto shadow-ld mx-auto `}
       >
-        <form className={`${flexCenter} flex-col gap-2`}>
+        <form className={`${flexCenter} flex-col gap-2 text-sm w-full`}>
           <div className="flex gap-3">
             {/* left side */}
             <div>
@@ -48,7 +45,7 @@ const Profile = () => {
                 id="email"
                 placeholder="email"
                 defaultValue={email}
-                className="border-1 border-violet-700 p-1"
+                className="border-1 border-violet-700 p-1 w-[275px]"
               />
               <div>Friend List: {friends}</div>
             </div>
