@@ -20,6 +20,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthorized(true)
   }
 
+  const updateAccount = async (updatedProfile: ProfileData) => {
+    const { error } = await supabase
+      .from('users')
+      .update(updatedProfile)
+      .eq('id', updatedProfile.id)
+    if (error) {
+      console.log('Error updating account:', error.message)
+      return false
+    } else {
+      setLoggedUser(updatedProfile)
+      setLocalStorageUserProfileFromSession(updatedProfile)
+      console.log('Account updated successfully')
+      return true
+    }
+  }
+
+  const setLocalStorageUserProfileFromSession = (profile: ProfileData) => {
+    if (!profile) return
+    localStorage.setItem('userProfile', JSON.stringify(profile))
+  }
+
   // Can only call this if a session is active (i.e., user is logged in) meaning:
   // we dont need to call another auth check here - we can assume user is logged in
   const getCurrentProfile = async () => {
@@ -28,13 +49,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const userId = session.user.id
       try {
         const res = await supabase.from('users').select('*').eq('id', userId).single()
-        console.log('getcurrentprofile', res.data)
-
         if (!res.data) {
           setIsAuthorized(false)
           return false
         }
-
+        setLocalStorageUserProfileFromSession(res.data)
         setLoggedUser(res.data as ProfileData)
         return true
       } catch (err) {
@@ -42,6 +61,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     return false
+  }
+
+  const deleteAccount = async (id: number) => {
+    const { error } = await supabase.from('users').delete().eq('id', id)
+    if (error) {
+      console.log('Error deleting account:', error.message)
+      return false
+    } else {
+      logout()
+      console.log('Account deleted successfully')
+      return true
+    }
   }
 
   const register = async (email: string, password: string): Promise<boolean> => {
@@ -116,6 +147,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loggedUser,
     getUserProfile,
     getCurrentProfile,
+    updateAccount,
+    deleteAccount,
   }
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

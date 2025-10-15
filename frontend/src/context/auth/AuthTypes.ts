@@ -8,4 +8,6 @@ export interface AuthContextType {
   getUserProfile: (id: number) => Promise<ProfileData | null>
   loggedUser: ProfileData | null
   getCurrentProfile: () => boolean
+  updateAccount: (data: Partial<ProfileData>) => Promise<boolean>
+  deleteAccount: (id: number) => void
 }
